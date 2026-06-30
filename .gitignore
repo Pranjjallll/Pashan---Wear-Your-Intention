@@ -5,3 +5,6 @@ dist
 .vite
 .env
 .env.local
+.wrangler
+node_modules-from-zip
+
