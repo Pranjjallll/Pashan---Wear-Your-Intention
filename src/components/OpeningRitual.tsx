@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
-import { PeacockGlyph } from "./BrandMark";
+import { useEffect, useRef, useState } from "react";
+import openingLogo from "@/assets/pashan-opening-logo.jpeg";
 
-const SESSION_KEY = "pashan-opening-seen-v3";
+const SESSION_KEY = "pashan-opening-seen-v5";
 
 export function OpeningRitual() {
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
+  const previousOverflow = useRef("");
+
+  const restoreBody = () => {
+    document.body.style.overflow = previousOverflow.current;
+  };
 
   const finish = () => {
     try {
@@ -14,7 +19,10 @@ export function OpeningRitual() {
       // Storage can be unavailable in privacy-restricted browsers.
     }
     setLeaving(true);
-    window.setTimeout(() => setVisible(false), 700);
+    window.setTimeout(() => {
+      restoreBody();
+      setVisible(false);
+    }, 700);
   };
 
   useEffect(() => {
@@ -29,44 +37,71 @@ export function OpeningRitual() {
       return;
     }
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const previous = document.body.style.overflow;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    previousOverflow.current = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const exitTimer = window.setTimeout(() => setLeaving(true), reduced ? 450 : 2950);
-    const doneTimer = window.setTimeout(() => {
-      try {
-        window.sessionStorage.setItem(SESSION_KEY, "1");
-      } catch {
-        // Storage can be unavailable in privacy-restricted browsers.
-      }
-      setVisible(false);
-      document.body.style.overflow = previous;
-    }, reduced ? 850 : 3650);
+    const exitTimer = window.setTimeout(
+      () => setLeaving(true),
+      reduced ? 450 : 3200,
+    );
+    const doneTimer = window.setTimeout(
+      () => {
+        try {
+          window.sessionStorage.setItem(SESSION_KEY, "1");
+        } catch {
+          // Storage can be unavailable in privacy-restricted browsers.
+        }
+        restoreBody();
+        setVisible(false);
+      },
+      reduced ? 850 : 4150,
+    );
 
     return () => {
       window.clearTimeout(exitTimer);
       window.clearTimeout(doneTimer);
-      document.body.style.overflow = previous;
+      restoreBody();
     };
   }, []);
 
   if (!visible) return null;
 
   return (
-    <div className={`opening-ritual ${leaving ? "is-leaving" : ""}`} role="dialog" aria-label="Welcome to PASHAN">
+    <div
+      className={`opening-ritual ${leaving ? "is-leaving" : ""}`}
+      role="dialog"
+      aria-label="Welcome to PASHAN"
+      aria-modal="true"
+    >
+      <div className="ritual-veil" aria-hidden />
       <div className="ritual-halo" />
-      <div className="ritual-stars" aria-hidden />
-      <div className="ritual-feather-wrap" aria-hidden>
-        <PeacockGlyph className="ritual-feather" />
-        <span className="ritual-ring ritual-ring-one" />
-        <span className="ritual-ring ritual-ring-two" />
+      <div className="ritual-stars" aria-hidden="true" />
+      <div className="ritual-border" aria-hidden="true" />
+      <div className="ritual-logo-wrap" aria-live="polite">
+        <div className="ritual-logo-panel">
+          <img
+            src={openingLogo}
+            alt="Pashan logo"
+            className="ritual-logo-image"
+          />
+        </div>
+        <div className="ritual-mantra" lang="hi">
+          पाषाण
+        </div>
+        <p>Rooted in nature. Aligned in spirit.</p>
+        <div className="ritual-beads" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
       </div>
-      <div className="ritual-copy">
-        <span className="ritual-kicker">A ritual in natural stone</span>
-        <span className="ritual-word">PASHAN</span>
-        <span className="ritual-mantra">शान्ति · ऊर्जा · संकल्प</span>
-      </div>
-      <button type="button" onClick={finish} className="ritual-skip">Enter atelier</button>
+      <button type="button" onClick={finish} className="ritual-skip">
+        Enter atelier
+      </button>
     </div>
   );
 }
