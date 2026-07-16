@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Reveal } from "./Reveal";
 
 import pyriteAtelier from "@/assets/editorial/pyrite-atelier.jpg";
 import packAmethyst from "@/assets/editorial/pack-amethyst.jpg";
@@ -37,36 +38,30 @@ export function EditorialStack() {
 
   return (
     <section
-      className="editorial-stack-section"
+      className="editorial-stack-section section-space"
       aria-labelledby="editorial-stack-title"
     >
-      <button
-        type="button"
-        className="editorial-arrow editorial-arrow-left"
-        onClick={() => move(-1)}
-        aria-label="Previous collection mood"
-      >
-        ‹
-      </button>
       <div className="container-luxe editorial-stack-layout">
         <div className="editorial-stack-copy">
-          <div className="eyebrow">Mood-led collections</div>
-          <h2 id="editorial-stack-title">
-            Ancient symbols,
-            <br />
-            modern desire.
-          </h2>
-          <p>
-            Swipe through moods inspired by the way real visitors shop —
-            abundance, calm, raw strength, and the quiet pull of a stone that
-            feels like yours.
-          </p>
+          <Reveal>
+            <div className="eyebrow">The Collection</div>
+            <h2 id="editorial-stack-title" className="h2-large">
+              You don't choose a stone.<br />
+              <em>You recognize yourself in one.</em>
+            </h2>
+            <p>
+              Our collections are curated for moments of stillness, courage, or
+              renewal. Explore the mood that calls to your current intention.
+            </p>
+            <Link to="/collections" className="btn-gold mt-8">
+              Explore the Collections <span>→</span>
+            </Link>
+          </Reveal>
         </div>
 
         <div className="editorial-card-stack" aria-live="polite">
           {slides.map((slide, index) => {
-            const offset =
-              (index - activeIndex + slides.length) % slides.length;
+            const offset = (index - activeIndex + slides.length) % slides.length;
             return (
               <Link
                 key={slide.title}
@@ -75,29 +70,51 @@ export function EditorialStack() {
                 aria-hidden={offset !== 0}
                 tabIndex={offset === 0 ? 0 : -1}
               >
-                <img src={slide.image} alt="" />
+                <img src={slide.image} alt={slide.title} />
                 <div className="editorial-slide-shade" />
                 <div className="editorial-slide-copy">
-                  <h3>{slide.title}</h3>
+                  <h3 className="h3-large">{slide.title}</h3>
                   <p>{slide.stones}</p>
-                  <span>Explore</span>
                 </div>
               </Link>
             );
           })}
-          <div className="editorial-stack-count">
-            {activeIndex + 1} of {slides.length}
+          
+          <div className="editorial-controls">
+            <button
+              type="button"
+              className="editorial-arrow editorial-arrow-left"
+              onClick={() => move(-1)}
+              aria-label="Previous collection"
+            >
+              ←
+            </button>
+            <div className="editorial-progress-bar">
+                {slides.map((_, index) => (
+                    <span key={index} className={index === activeIndex ? "active" : ""}/>
+                ))}
+            </div>
+            <button
+              type="button"
+              className="editorial-arrow editorial-arrow-right"
+              onClick={() => move(1)}
+              aria-label="Next collection"
+            >
+              →
+            </button>
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        className="editorial-arrow editorial-arrow-right"
-        onClick={() => move(1)}
-        aria-label="Next collection mood"
-      >
-        ›
-      </button>
+      
+      <div className="container-luxe mt-16 text-center">
+        <Reveal delay={200}>
+            <blockquote className="quote-text text-lg italic">
+                "The stone does not change your life.<br />
+                It simply reminds you who you intended to become."
+            </blockquote>
+        </Reveal>
+      </div>
     </section>
   );
 }
+
