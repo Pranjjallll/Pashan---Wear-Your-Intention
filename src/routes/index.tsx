@@ -40,13 +40,25 @@ function Index() {
     <SiteLayout>
       <Hero />
       <HousePromise />
-      <EditorialStack />
-      <IntentionBeads />
+      <Reveal className="section-space">
+        <EditorialStack />
+      </Reveal>
+      <Reveal className="section-space">
+        <IntentionBeads />
+      </Reveal>
       <CollectionEdit />
-      <HimalayanStory />
-      <IntentionFinder />
-      <Presentation />
-      <JournalAndCircle />
+      <Reveal className="section-space">
+        <HimalayanStory />
+      </Reveal>
+      <Reveal className="section-space">
+        <IntentionFinder />
+      </Reveal>
+      <Reveal className="section-space">
+        <Presentation />
+      </Reveal>
+      <Reveal className="section-space">
+        <JournalAndCircle />
+      </Reveal>
     </SiteLayout>
   );
 }
@@ -159,7 +171,7 @@ function CollectionEdit() {
         </Reveal>
         <div className="collection-grid-premium">
           {collections.map((product, index) => (
-            <Reveal key={product.slug} delay={(index % 4) * 80}>
+            <Reveal key={product.slug} staggerIndex={index % 4}>
               <ProductCard product={product} index={index} />
             </Reveal>
           ))}
@@ -228,7 +240,7 @@ function IntentionFinder() {
         </Reveal>
         <div className="intention-list">
           {intentions.map((item, index) => (
-            <Reveal key={item.key} delay={index * 65}>
+            <Reveal key={item.key} staggerIndex={index}>
               <Link to="/products/$slug" params={{ slug: item.slug }}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{item.label}</strong>
