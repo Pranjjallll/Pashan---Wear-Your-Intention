@@ -5,11 +5,13 @@ import { IntentionBeads } from "@/components/IntentionBeads";
 import { PeacockGlyph } from "@/components/BrandMark";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
+import { QuoteSection } from "@/components/QuoteSection";
+import { EditorialStory } from "@/components/EditorialStory";
+import { EditorialProductGrid } from "@/components/EditorialProductGrid";
+import { CraftsmanshipSection } from "@/components/CraftsmanshipSection";
 import { collections, intentions } from "@/data/products";
 import heroImage from "@/assets/editorial/ritual-ember.jpg";
 import tigerClose from "@/assets/editorial/tiger-eye-marble.jpg";
-import ritualRed from "@/assets/editorial/ritual-red-certificate.jpg";
-import ritualForest from "@/assets/editorial/ritual-forest.jpg";
 import ritualGold from "@/assets/editorial/ritual-saffron.jpg";
 import ritualTemple from "@/assets/editorial/ritual-temple.jpg";
 import packTiger from "@/assets/editorial/pack-tiger-eye.jpg";
@@ -40,25 +42,15 @@ function Index() {
     <SiteLayout>
       <Hero />
       <HousePromise />
-      <Reveal className="section-space">
-        <EditorialStack />
-      </Reveal>
-      <Reveal className="section-space">
-        <IntentionBeads />
-      </Reveal>
-      <CollectionEdit />
-      <Reveal className="section-space">
-        <HimalayanStory />
-      </Reveal>
-      <Reveal className="section-space">
-        <IntentionFinder />
-      </Reveal>
-      <Reveal className="section-space">
-        <Presentation />
-      </Reveal>
-      <Reveal className="section-space">
-        <JournalAndCircle />
-      </Reveal>
+      <QuoteSection />
+      <EditorialStack />
+      <EditorialStory />
+      <IntentionBeads />
+      <EditorialProductGrid />
+      <CraftsmanshipSection />
+      <IntentionFinder />
+      <Presentation />
+      <JournalAndCircle />
     </SiteLayout>
   );
 }
@@ -153,83 +145,13 @@ function HousePromise() {
   );
 }
 
-function CollectionEdit() {
-  return (
-    <section className="collection-edit section-space">
-      <div className="container-luxe">
-        <Reveal className="section-heading split-heading">
-          <div>
-            <div className="eyebrow">The complete edit · Ten pieces</div>
-            <h2>
-              Objects of <em>intention.</em>
-            </h2>
-          </div>
-          <p>
-            Every bracelet begins with a quality worth carrying. Explore the
-            catalogue by stone, intention, or the colour that catches your eye.
-          </p>
-        </Reveal>
-        <div className="collection-grid-premium">
-          {collections.map((product, index) => (
-            <Reveal key={product.slug} staggerIndex={index % 4}>
-              <ProductCard product={product} index={index} />
-            </Reveal>
-          ))}
-        </div>
-        <div className="collection-endnote">
-          <PeacockGlyph />
-          <span>
-            Natural variation is not a flaw. It is the signature of the stone.
-          </span>
-          <Link to="/collections">View catalogue details →</Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function HimalayanStory() {
-  return (
-    <section className="story-editorial">
-      <div className="story-image story-image-main">
-        <img
-          src={ritualRed}
-          alt="PASHAN presentation box, Tiger's Eye bracelet and authenticity card"
-        />
-      </div>
-      <div className="story-copy-panel grain">
-        <Reveal>
-          <div className="eyebrow">Rooted in Earth · Aligned in Spirit</div>
-          <h2>From Himalayan stillness to the rhythm of modern life.</h2>
-          <p>
-            <em>Pashan</em> is a Sanskrit word meaning stone. Born from the
-            spirit of the Himalayas, the house brings ancient material wisdom
-            into a fast-moving world with a distinctly contemporary eye.
-          </p>
-          <p>
-            We do not promise magic. We make meaningful objects: natural stones,
-            honest symbolism, fine presentation, and a daily invitation to
-            choose deliberately.
-          </p>
-          <Link to="/about" className="btn-outline-light">
-            Enter our story <span>↗</span>
-          </Link>
-        </Reveal>
-      </div>
-      <div className="story-image story-image-side">
-        <img src={ritualForest} alt="Forest green PASHAN presentation box" />
-      </div>
-    </section>
-  );
-}
-
 function IntentionFinder() {
   return (
     <section className="intention-section section-space">
       <div className="container-luxe intention-layout">
         <Reveal className="intention-intro">
           <div className="eyebrow">Choose by intention</div>
-          <h2>Begin with a word.</h2>
+          <h2 className="h2-large">Begin with a word.</h2>
           <p>
             Sometimes the clearest way to choose a stone is to name what you
             want more of in your days.
@@ -275,7 +197,7 @@ function Presentation() {
       <div className="container-luxe presentation-copy">
         <Reveal>
           <div className="eyebrow">The PASHAN presentation</div>
-          <h2>
+          <h2 className="h2-large">
             The first impression
             <br />
             is part of the piece.
