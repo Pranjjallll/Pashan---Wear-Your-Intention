@@ -834,6 +834,12 @@ button {
   }
 }
 
+@media (pointer: coarse) {
+  .glow-container {
+    display: none !important;
+  }
+}
+
 .reveal-block {
   opacity: 0;
   transform: translateY(24px);

@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, ReactNode, useEffect } from "react";
 import { BrandMark, PeacockGlyph } from "./BrandMark";
 import { CartDrawer } from "./CartDrawer";
-import { OpeningRitual } from "./OpeningRitual";
 
 const SHOP_CATEGORIES = [
   {
@@ -36,7 +35,12 @@ function Header() {
 
   return (
     <>
-      <header className={`site-header ${isScrolled ? 'is-scrolled' : ''} ${shopOpen ? 'is-open' : ''}`}>
+      <motion.header 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`site-header ${isScrolled ? 'is-scrolled' : ''} ${shopOpen ? 'is-open' : ''}`}
+      >
         <div className="header-wrapper">
           <div className="container-luxe header-inner">
             <BrandMark />
@@ -84,7 +88,7 @@ function Header() {
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
       {shopOpen && <div className="header-overlay" />}
     </>
   );
@@ -126,7 +130,6 @@ function Footer() {
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <div className="site-shell">
-      <OpeningRitual />
       <Header />
       <main className="site-main">{children}</main>
       <Footer />

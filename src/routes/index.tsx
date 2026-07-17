@@ -36,7 +36,7 @@ function Hero() {
       <motion.img 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.5 }}
         src={heroImage} 
         alt="PASHAN" 
         className="premium-hero-image" 
@@ -44,17 +44,30 @@ function Hero() {
       <div className="container-luxe premium-hero-inner">
         <div className="premium-hero-copy">
           <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 12, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
             className="text-6xl md:text-8xl font-serif"
           >
             Jewellery That Carries Meaning.
           </motion.h1>
-          <div className="hero-actions mt-8 flex gap-4">
+          <motion.p
+            initial={{ y: 12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+            className="text-xl md:text-2xl mt-4"
+          >
+            Rooted in nature. Aligned in spirit.
+          </motion.p>
+          <motion.div 
+            initial={{ y: 12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+            className="hero-actions mt-8 flex gap-4"
+          >
             <Link to="/collections" className="btn-gold">Shop Collection</Link>
             <Link to="/find-your-bracelet" className="btn-outline-light">Find Your Stone</Link>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -77,7 +90,6 @@ function TrustBar() {
 }
 
 function ShopByStone() {
-  // Map specific stones to their collection slugs
   const stones = [
     { name: "Tiger Eye", slug: "tiger-eye" },
     { name: "Pyrite", slug: "pyrite" },
@@ -92,20 +104,28 @@ function ShopByStone() {
         {stones.map(stone => {
           const product = collections.find(c => c.slug === stone.slug);
           return (
-            <Link key={stone.slug} to="/products/$slug" params={{ slug: stone.slug }} className="group cursor-pointer block">
-              <div className="aspect-[3/4] bg-surface rounded-lg mb-4 overflow-hidden">
-                 <motion.img 
-                   whileHover={{ scale: 1.05 }}
-                   transition={{ duration: 0.5, ease: "easeOut" }}
-                   src={product?.image} 
-                   alt={stone.name} 
-                   className="w-full h-full object-cover" 
-                 />
-              </div>
-              <h3 className="text-xl font-serif">{stone.name}</h3>
-              <p className="text-muted-foreground text-sm mb-2">Shop the {stone.name.toLowerCase()} collection</p>
-              <button className="text-gold underline underline-offset-4 text-sm">Shop {stone.name}</button>
-            </Link>
+            <motion.div 
+              key={stone.slug}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <Link to="/products/$slug" params={{ slug: stone.slug }} className="group cursor-pointer block">
+                <div className="aspect-[3/4] bg-surface rounded-lg mb-4 overflow-hidden">
+                   <motion.img 
+                     whileHover={{ scale: 1.05 }}
+                     transition={{ duration: 0.5, ease: "easeOut" }}
+                     src={product?.image} 
+                     alt={stone.name} 
+                     className="w-full h-full object-cover" 
+                   />
+                </div>
+                <h3 className="text-xl font-serif">{stone.name}</h3>
+                <p className="text-muted-foreground text-sm mb-2">Shop the {stone.name.toLowerCase()} collection</p>
+                <button className="text-gold underline underline-offset-4 text-sm">Shop {stone.name}</button>
+              </Link>
+            </motion.div>
           );
         })}
       </div>
@@ -120,22 +140,30 @@ function BestSellers() {
       <h2 className="text-5xl font-serif mb-12 text-center">Best Sellers</h2>
       <div className="grid md:grid-cols-4 gap-6">
         {products.map(product => (
-          <Link key={product.slug} to="/products/$slug" params={{ slug: product.slug }} className="bg-background rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 block">
-            <div className="aspect-square bg-surface rounded-lg mb-4 overflow-hidden">
-                <motion.img 
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  src={product.image} 
-                  alt={product.title} 
-                  className="w-full h-full object-cover" 
-                />
-            </div>
-            <h3 className="font-serif text-lg">{product.title}</h3>
-            <div className="flex justify-between items-center mt-2">
-                <span className="text-gold-soft">${product.price}</span>
-                <button className="btn-gold text-xs px-4 py-2">View</button>
-            </div>
-          </Link>
+          <motion.div 
+            key={product.slug}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <Link to="/products/$slug" params={{ slug: product.slug }} className="bg-background rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 block">
+              <div className="aspect-square bg-surface rounded-lg mb-4 overflow-hidden">
+                  <motion.img 
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    src={product.image} 
+                    alt={product.title} 
+                    className="w-full h-full object-cover" 
+                  />
+              </div>
+              <h3 className="font-serif text-lg">{product.title}</h3>
+              <div className="flex justify-between items-center mt-2">
+                  <span className="text-gold-soft">${product.price}</span>
+                  <button className="btn-gold text-xs px-4 py-2">View</button>
+              </div>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </section>
