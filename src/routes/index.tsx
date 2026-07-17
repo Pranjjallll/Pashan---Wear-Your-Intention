@@ -2,13 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
 import { PeacockGlyph } from "@/components/BrandMark";
-import { intentions } from "@/data/products";
+import { intentions, collections } from "@/data/products";
 import heroImage from "@/assets/editorial/ritual-ember.jpg";
-import tigerClose from "@/assets/editorial/tiger-eye-marble.jpg";
 import ritualGold from "@/assets/editorial/ritual-saffron.jpg";
-import ritualTemple from "@/assets/editorial/ritual-temple.jpg";
-import packTiger from "@/assets/editorial/pack-tiger-eye.jpg";
-import packAmethyst from "@/assets/editorial/pack-amethyst.jpg";
+import { motion } from "framer-motion";
+import { RecentlyViewed } from "@/components/RecentlyViewed";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -25,6 +23,7 @@ function Index() {
       <WhyPashan />
       <PackagingSection />
       <JournalSection />
+      <RecentlyViewed />
       <NewsletterSection />
     </SiteLayout>
   );
@@ -34,10 +33,24 @@ function Hero() {
   return (
     <section className="premium-hero">
       <div className="premium-hero-overlay" />
-      <img src={heroImage} alt="PASHAN" className="premium-hero-image" />
+      <motion.img 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        src={heroImage} 
+        alt="PASHAN" 
+        className="premium-hero-image" 
+      />
       <div className="container-luxe premium-hero-inner">
         <div className="premium-hero-copy">
-          <h1 className="text-6xl md:text-8xl font-serif">Jewellery That Carries Meaning.</h1>
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-6xl md:text-8xl font-serif"
+          >
+            Jewellery That Carries Meaning.
+          </motion.h1>
           <div className="hero-actions mt-8 flex gap-4">
             <Link to="/collections" className="btn-gold">Shop Collection</Link>
             <Link to="/find-your-bracelet" className="btn-outline-light">Find Your Stone</Link>
@@ -64,47 +77,71 @@ function TrustBar() {
 }
 
 function ShopByStone() {
-  const stones = ["Tiger Eye", "Pyrite", "Amethyst", "Green Quartz"];
+  // Map specific stones to their collection slugs
+  const stones = [
+    { name: "Tiger Eye", slug: "tiger-eye" },
+    { name: "Pyrite", slug: "pyrite" },
+    { name: "Amethyst", slug: "amethyst" },
+    { name: "Green Quartz", slug: "green-quartz" }
+  ];
+
   return (
     <section className="py-24 container-luxe">
       <h2 className="text-5xl font-serif mb-12">Shop by Stone</h2>
       <div className="grid md:grid-cols-4 gap-6">
-        {stones.map(stone => (
-          <div key={stone} className="group cursor-pointer">
-            <div className="aspect-[3/4] bg-surface rounded-lg mb-4 overflow-hidden">
-               <img src={tigerClose} alt={stone} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            </div>
-            <h3 className="text-xl font-serif">{stone}</h3>
-            <p className="text-muted-foreground text-sm mb-2">Description of benefits...</p>
-            <button className="text-gold underline underline-offset-4 text-sm">Shop {stone}</button>
-          </div>
-        ))}
+        {stones.map(stone => {
+          const product = collections.find(c => c.slug === stone.slug);
+          return (
+            <Link key={stone.slug} to="/products/$slug" params={{ slug: stone.slug }} className="group cursor-pointer block">
+              <div className="aspect-[3/4] bg-surface rounded-lg mb-4 overflow-hidden">
+                 <motion.img 
+                   whileHover={{ scale: 1.05 }}
+                   transition={{ duration: 0.5, ease: "easeOut" }}
+                   src={product?.image} 
+                   alt={stone.name} 
+                   className="w-full h-full object-cover" 
+                 />
+              </div>
+              <h3 className="text-xl font-serif">{stone.name}</h3>
+              <p className="text-muted-foreground text-sm mb-2">Shop the {stone.name.toLowerCase()} collection</p>
+              <button className="text-gold underline underline-offset-4 text-sm">Shop {stone.name}</button>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
 }
 
 function BestSellers() {
+  const products = collections.slice(0, 4); // Take first 4 for best sellers
   return (
     <section className="py-24 container-luxe bg-card rounded-2xl">
       <h2 className="text-5xl font-serif mb-12 text-center">Best Sellers</h2>
       <div className="grid md:grid-cols-4 gap-6">
-        {[1,2,3,4].map(i => (
-          <div key={i} className="bg-background rounded-xl p-4 shadow-lg hover:shadow-2xl transition-shadow">
+        {products.map(product => (
+          <Link key={product.slug} to="/products/$slug" params={{ slug: product.slug }} className="bg-background rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 block">
             <div className="aspect-square bg-surface rounded-lg mb-4 overflow-hidden">
-                <img src={packTiger} alt="Product" className="w-full h-full object-cover" />
+                <motion.img 
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  src={product.image} 
+                  alt={product.title} 
+                  className="w-full h-full object-cover" 
+                />
             </div>
-            <h3 className="font-serif text-lg">Gemstone Bracelet</h3>
+            <h3 className="font-serif text-lg">{product.title}</h3>
             <div className="flex justify-between items-center mt-2">
-                <span className="text-gold-soft">$120</span>
-                <button className="btn-gold text-xs px-4 py-2">Quick Add</button>
+                <span className="text-gold-soft">${product.price}</span>
+                <button className="btn-gold text-xs px-4 py-2">View</button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>
   );
 }
+
 
 function ShopByIntention() {
     return (

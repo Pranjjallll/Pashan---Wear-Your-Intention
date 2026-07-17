@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PeacockGlyph } from "@/components/BrandMark";
 import { ProductCard } from "@/components/ProductCard";
@@ -7,6 +7,9 @@ import { Reveal } from "@/components/Reveal";
 import { collections, getCollection } from "@/data/products";
 import { formatPrice, useCart } from "@/lib/cart";
 import presentationImage from "@/assets/editorial/ritual-red-certificate.jpg";
+import { DeliveryStrip } from "@/components/DeliveryStrip";
+import { RecentlyViewed } from "@/components/RecentlyViewed";
+import { useRecentlyViewed } from "@/hooks/use-recently-viewed";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
@@ -32,11 +35,16 @@ export const Route = createFileRoute("/products/$slug")({
 function ProductPage() {
   const product = Route.useLoaderData();
   const { add } = useCart();
+  const { addView } = useRecentlyViewed();
   const [selectedImage, setSelectedImage] = useState(0);
   const [size, setSize] = useState("7.5 in");
   const [qty, setQty] = useState(1);
   const [openPanel, setOpenPanel] = useState<"story" | "details" | "care" | null>("story");
   const related = collections.filter((item) => item.slug !== product.slug).slice(0, 3);
+
+  useEffect(() => {
+    addView(product.slug);
+  }, [product.slug, addView]);
 
   const addToBag = () => add({ slug: product.slug, name: product.title, stone: `${product.stone} · ${size}`, price: product.price, image: product.image }, qty);
 
@@ -87,9 +95,7 @@ function ProductPage() {
           </div>
           <button onClick={addToBag} className="buy-now-button">Reserve with concierge</button>
 
-          <div className="product-assurances">
-            <span>◇ Authenticity details</span><span>✦ Handmade in India</span><span>⌁ Premium presentation</span>
-          </div>
+          <DeliveryStrip />
 
           <div className="product-panels">
             {[
@@ -132,6 +138,8 @@ function ProductPage() {
           <div className="related-grid">{related.map((item, index) => <ProductCard key={item.slug} product={item} index={index} />)}</div>
         </div>
       </section>
+      
+      <RecentlyViewed />
     </SiteLayout>
   );
 }

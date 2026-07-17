@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as CollectionsRouteImport } from './routes/collections'
-import { Route as CollectionsSlugRouteImport } from './routes/collections.$slug'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as FindYourBraceletRouteImport } from './routes/find-your-bracelet'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as JournalRouteImport } from './routes/journal'
-import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
-import { Route as RashiRouteImport } from './routes/rashi'
 import { Route as RitualsRouteImport } from './routes/rituals'
+import { Route as RashiRouteImport } from './routes/rashi'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as FindYourBraceletRouteImport } from './routes/find-your-bracelet'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CollectionsRouteImport } from './routes/collections'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
+import { Route as CollectionsSlugRouteImport } from './routes/collections.$slug'
 
 const RitualsRoute = RitualsRouteImport.update({
   id: '/rituals',
