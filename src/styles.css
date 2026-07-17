@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * PASHAN — Luxury Gemstone House Design System
+ * PASHAN G�� Luxury Gemstone House Design System
  * Cinematic, editorial, architectural minimalism.
  * Inspired by Rolex, Tom Ford, Aman Resorts, Cartier.
  */
@@ -66,7 +66,7 @@
 
 :root {
   --radius: 0.25rem;
-  /* Core palette — #0F1113 / #171A1D / #1D2125 / #F5F3EE / #A8ADB4 / #C8A15A */
+  /* Core palette G�� #0F1113 / #171A1D / #1D2125 / #F5F3EE / #A8ADB4 / #C8A15A */
   --background: oklch(0.215 0.006 250);
   --foreground: oklch(0.965 0.008 92);
   --surface: oklch(0.27 0.006 250);
@@ -182,11 +182,13 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  transition: all 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: all 0.25s ease;
   border: 1px solid var(--gold);
   &:hover {
     background: transparent;
     color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(200, 161, 90, 0.2), 0 0 10px rgba(200, 161, 90, 0.1);
   }
 }
 
@@ -203,11 +205,13 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  transition: all 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: all 0.25s ease;
   border: 1px solid var(--border);
   &:hover {
     border-color: var(--gold);
     color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -386,12 +390,16 @@ button {
   z-index: 60;
   color: var(--foreground);
   transition:
-    background-color 0.45s ease,
-    backdrop-filter 0.45s ease;
+    background-color 0.4s ease,
+    backdrop-filter 0.4s ease,
+    border-color 0.4s ease;
+  background-color: rgba(17, 17, 17, 0.93);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .site-header.is-scrolled {
-  background: color-mix(in oklab, var(--background) 92%, transparent);
-  backdrop-filter: blur(20px);
+  border-color: var(--gold);
 }
 .header-inner {
   position: relative;
@@ -588,7 +596,7 @@ button {
 }
 .ritual-border::before,
 .ritual-border::after {
-  content: "✦";
+  content: "G��";
   position: absolute;
   left: 50%;
   color: rgba(202, 170, 104, 0.48);
@@ -3294,4 +3302,40 @@ button {
   .hairline {
     animation: none !important;
   }
+}
+
+
+
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100vw;
+  background-color: rgba(17, 17, 17, 0.95);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--gold);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 3rem 5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  z-index: 50;
+}
+.mega-column h4 {
+  color: var(--gold);
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.mega-column a {
+  display: block;
+  color: var(--foreground);
+  font-size: 0.8rem;
+  margin-bottom: 0.8rem;
+  transition: color 0.3s ease;
+}
+.mega-column a:hover {
+  color: var(--gold);
 }

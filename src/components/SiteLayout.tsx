@@ -1,114 +1,92 @@
 import { useCart } from "@/lib/cart";
 import { Link } from "@tanstack/react-router";
-import { motion, useAnimation, useMotionValueEvent, useScroll, useSpring, useTransform } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, ReactNode, useEffect } from "react";
 import { BrandMark, PeacockGlyph } from "./BrandMark";
 import { CartDrawer } from "./CartDrawer";
 import { OpeningRitual } from "./OpeningRitual";
 
-const NAV = [
-  { to: "/collections", label: "Bracelets" },
-  { to: "/find-your-bracelet", label: "Stone finder" },
-  { to: "/rituals", label: "Rituals" },
-  { to: "/rashi", label: "Rashi" },
-  { to: "/journal", label: "Journal" },
-  { to: "/about", label: "Our house" },
-] as const;
-
-function Marquee() {
-  return (
-    <div className="announcement-marquee">
-      <style>{`
-        .announcement-marquee {
-          overflow: hidden;
-          display: flex;
-        }
-        .announcement-container {
-          display: flex;
-          width: max-content;
-          animation: marquee-scroll 40s linear infinite;
-        }
-        .announcement-container:hover {
-          animation-play-state: paused;
-        }
-        @keyframes marquee-scroll {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-      `}</style>
-      <div className="announcement-container">
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="announcement-item">
-            <span>Haridwar · Himalayan inspired · Handmade in India · Complimentary authenticity card with every piece</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+const SHOP_CATEGORIES = [
+  {
+    label: "By Stone",
+    links: ["Tiger Eye", "Pyrite", "Amethyst", "Green Quartz", "Citrine", "Lava", "Hematite", "Black Onyx"]
+  },
+  {
+    label: "By Intention",
+    links: ["Leadership", "Prosperity", "Growth", "Focus", "Protection", "Balance", "Healing"]
+  },
+  {
+    label: "Featured",
+    links: ["Best Sellers", "Gift Sets", "New Arrivals"]
+  }
+];
 
 function Header() {
   const { count, setOpen } = useCart();
-  const { scrollY } = useScroll();
-  const scrolled = useTransform(scrollY, [20, 100], [0, 1]);
-  const blur = useSpring(useTransform(scrolled, [0, 1], [0, 12]), { damping: 20 });
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const controls = useAnimation();
+  const [shopOpen, setShopOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  useMotionValueEvent(blur, "change", (latest) => {
-    document.documentElement.style.setProperty("--header-blur", `${latest}px`);
-  });
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="site-header">
-      <Marquee />
-      <motion.div 
-        className="header-wrapper"
-        style={{ backdropFilter: `blur(var(--header-blur))` }}
-      >
-        <div className="container-luxe header-inner">
-          <BrandMark />
-          <nav className="header-nav">
-            {NAV.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="header-link"
-                activeProps={{ className: "is-active" }}
+    <>
+      <header className={`site-header ${isScrolled ? 'is-scrolled' : ''} ${shopOpen ? 'is-open' : ''}`}>
+        <div className="header-wrapper">
+          <div className="container-luxe header-inner">
+            <BrandMark />
+            <nav className="header-nav">
+              <div 
+                className="nav-item" 
+                onMouseEnter={() => setShopOpen(true)} 
+                onMouseLeave={() => setShopOpen(false)}
               >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="header-actions">
-            <Link to="/contact" className="header-concierge">Concierge</Link>
-            <button onClick={() => setOpen(true)} className="cart-trigger">
-              Bag <span>{String(count).padStart(2, "0")}</span>
-            </button>
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className={`menu-trigger ${mobileOpen ? "is-open" : ""}`}
-            >
-              <span /><span />
-            </button>
+                <Link to="/collections" className="header-link">Shop</Link>
+                <AnimatePresence>
+                  {shopOpen && (
+                    <motion.div 
+                      className="mega-menu"
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                    >
+                      {SHOP_CATEGORIES.map(cat => (
+                        <div key={cat.label} className="mega-column">
+                          <h4>{cat.label}</h4>
+                          {cat.links.map(link => (
+                            <Link key={link} to={`/collections/${link.toLowerCase().replace(' ', '-')}`}>
+                              {link}
+                            </Link>
+                          ))}
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <Link to="/find-your-bracelet" className="header-link">Stone Finder</Link>
+              <Link to="/collections" className="header-link">Collections</Link>
+              <Link to="/journal" className="header-link">Journal</Link>
+              <Link to="/rashi" className="header-link">Rashi</Link>
+              <Link to="/about" className="header-link">About</Link>
+            </nav>
+            <div className="header-actions">
+              <button className="header-icon">Search</button>
+              <button onClick={() => setOpen(true)} className="cart-trigger">
+                Bag ({String(count).padStart(2, "0")})
+              </button>
+            </div>
           </div>
         </div>
-      </motion.div>
-      <motion.div 
-        className={`mobile-menu ${mobileOpen ? "is-open" : ""}`}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: mobileOpen ? 1 : 0, y: mobileOpen ? 0 : -20 }}
-      >
-        <div className="mobile-feather"><PeacockGlyph /></div>
-        <nav className="container-luxe mobile-nav">
-          {NAV.map((item, index) => (
-            <Link key={item.to} to={item.to} onClick={() => setMobileOpen(false)}>
-              <span>{String(index + 1).padStart(2, "0")}</span>{item.label}
-            </Link>
-          ))}
-        </nav>
-      </motion.div>
-    </header>
+      </header>
+      {shopOpen && <div className="header-overlay" />}
+    </>
   );
 }
 

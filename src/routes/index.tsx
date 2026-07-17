@@ -1,15 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { EditorialStack } from "@/components/EditorialStack";
-import { IntentionBeads } from "@/components/IntentionBeads";
-import { PeacockGlyph } from "@/components/BrandMark";
-import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
-import { QuoteSection } from "@/components/QuoteSection";
-import { EditorialStory } from "@/components/EditorialStory";
-import { EditorialProductGrid } from "@/components/EditorialProductGrid";
-import { CraftsmanshipSection } from "@/components/CraftsmanshipSection";
-import { collections, intentions } from "@/data/products";
+import { PeacockGlyph } from "@/components/BrandMark";
+import { intentions } from "@/data/products";
 import heroImage from "@/assets/editorial/ritual-ember.jpg";
 import tigerClose from "@/assets/editorial/tiger-eye-marble.jpg";
 import ritualGold from "@/assets/editorial/ritual-saffron.jpg";
@@ -18,22 +11,6 @@ import packTiger from "@/assets/editorial/pack-tiger-eye.jpg";
 import packAmethyst from "@/assets/editorial/pack-amethyst.jpg";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "PASHAN — Himalayan Gemstone Bracelets" },
-      {
-        name: "description",
-        content:
-          "Premium natural gemstone bracelets from Haridwar. Rooted in Himalayan calm, made with intention in India.",
-      },
-      { property: "og:title", content: "PASHAN — Stone · Energy · Intention" },
-      {
-        property: "og:description",
-        content:
-          "Natural gemstone bracelets for courage, clarity, grounding, balance, and renewal.",
-      },
-    ],
-  }),
   component: Index,
 });
 
@@ -41,222 +18,169 @@ function Index() {
   return (
     <SiteLayout>
       <Hero />
-      <HousePromise />
-      <QuoteSection />
-      <EditorialStack />
-      <EditorialStory />
-      <IntentionBeads />
-      <EditorialProductGrid />
-      <CraftsmanshipSection />
-      <IntentionFinder />
-      <Presentation />
-      <JournalAndCircle />
+      <TrustBar />
+      <ShopByStone />
+      <BestSellers />
+      <ShopByIntention />
+      <WhyPashan />
+      <PackagingSection />
+      <JournalSection />
+      <NewsletterSection />
     </SiteLayout>
   );
 }
 
 function Hero() {
   return (
-    <section className="premium-hero grain">
-      <img
-        src={heroImage}
-        alt="PASHAN Tiger's Eye bracelet presented in a handcrafted saffron box"
-        className="premium-hero-image"
-      />
+    <section className="premium-hero">
       <div className="premium-hero-overlay" />
-      <div className="premium-hero-lines" aria-hidden />
+      <img src={heroImage} alt="PASHAN" className="premium-hero-image" />
       <div className="container-luxe premium-hero-inner">
         <div className="premium-hero-copy">
-          <div className="hero-overline">
-            <span /> Himalayan gemstone atelier <span />
+          <h1 className="text-6xl md:text-8xl font-serif">Jewellery That Carries Meaning.</h1>
+          <div className="hero-actions mt-8 flex gap-4">
+            <Link to="/collections" className="btn-gold">Shop Collection</Link>
+            <Link to="/find-your-bracelet" className="btn-outline-light">Find Your Stone</Link>
           </div>
-          <h1>
-            Wear the quality
-            <br />
-            you wish to <em>become.</em>
-          </h1>
-          <p>
-            Natural gemstone bracelets from Haridwar, composed as quiet symbols
-            of courage, balance, focus, and renewal.
-          </p>
-          <div className="hero-actions">
-            <Link to="/collections" className="btn-gold">
-              Discover the collection <span>↗</span>
-            </Link>
-            <Link to="/find-your-bracelet" className="text-link">
-              Find your stone <span>→</span>
-            </Link>
-          </div>
-        </div>
-        <Link
-          to="/products/$slug"
-          params={{ slug: "tiger-eye" }}
-          className="hero-object-card"
-        >
-          <div className="hero-object-image">
-            <img src={tigerClose} alt="Tiger's Eye bracelet close-up" />
-          </div>
-          <div>
-            <span>House signature · 01</span>
-            <strong>Tiger's Eye</strong>
-            <small>Courage · Focus · Protection</small>
-          </div>
-        </Link>
-        <div className="hero-scroll">
-          <span /> Scroll to enter
         </div>
       </div>
     </section>
   );
 }
 
-function HousePromise() {
-  const promises = [
-    [
-      "01",
-      "Authentic natural stone",
-      "Each piece is selected for natural character, tone, and finish.",
-    ],
-    [
-      "02",
-      "Handmade with intention",
-      "Composed bead by bead in India, in small considered batches.",
-    ],
-    [
-      "03",
-      "A complete ritual",
-      "Presentation box, stone story, intention card, and authenticity details.",
-    ],
-  ];
+function TrustBar() {
+  const items = ["Natural Stones", "Authenticity Certificate", "Complimentary Ganga Jal", "Handmade in India", "Secure Checkout"];
   return (
-    <section className="promise-strip">
-      <div className="container-luxe promise-grid">
-        {promises.map(([number, title, copy], index) => (
-          <Reveal key={title} delay={index * 100} className="promise-item">
-            <span>{number}</span>
-            <div>
-              <h2>{title}</h2>
-              <p>{copy}</p>
-            </div>
-          </Reveal>
+    <section className="bg-surface py-8 border-y border-border">
+      <div className="container-luxe flex justify-between flex-wrap gap-4 text-sm text-gold-soft">
+        {items.map(item => (
+          <div key={item} className="flex items-center gap-2">
+            <span>✦</span> {item}
+          </div>
         ))}
       </div>
     </section>
   );
 }
 
-function IntentionFinder() {
+function ShopByStone() {
+  const stones = ["Tiger Eye", "Pyrite", "Amethyst", "Green Quartz"];
   return (
-    <section className="intention-section section-space">
-      <div className="container-luxe intention-layout">
-        <Reveal className="intention-intro">
-          <div className="eyebrow">Choose by intention</div>
-          <h2 className="h2-large">Begin with a word.</h2>
-          <p>
-            Sometimes the clearest way to choose a stone is to name what you
-            want more of in your days.
-          </p>
-          <Link to="/find-your-bracelet" className="text-link">
-            Take the stone finder <span>→</span>
-          </Link>
-        </Reveal>
-        <div className="intention-list">
-          {intentions.map((item, index) => (
-            <Reveal key={item.key} staggerIndex={index}>
-              <Link to="/products/$slug" params={{ slug: item.slug }}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <strong>{item.label}</strong>
-                <i>Discover stone</i>
-                <b>↗</b>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+    <section className="py-24 container-luxe">
+      <h2 className="text-5xl font-serif mb-12">Shop by Stone</h2>
+      <div className="grid md:grid-cols-4 gap-6">
+        {stones.map(stone => (
+          <div key={stone} className="group cursor-pointer">
+            <div className="aspect-[3/4] bg-surface rounded-lg mb-4 overflow-hidden">
+               <img src={tigerClose} alt={stone} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <h3 className="text-xl font-serif">{stone}</h3>
+            <p className="text-muted-foreground text-sm mb-2">Description of benefits...</p>
+            <button className="text-gold underline underline-offset-4 text-sm">Shop {stone}</button>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-function Presentation() {
+function BestSellers() {
   return (
-    <section className="presentation-section grain">
-      <div className="presentation-collage" aria-hidden>
-        <div>
-          <img src={ritualGold} alt="" />
-        </div>
-        <div>
-          <img src={ritualTemple} alt="" />
-        </div>
-        <div>
-          <img src={packTiger} alt="" />
-        </div>
-        <div>
-          <img src={packAmethyst} alt="" />
-        </div>
-      </div>
-      <div className="container-luxe presentation-copy">
-        <Reveal>
-          <div className="eyebrow">The PASHAN presentation</div>
-          <h2 className="h2-large">
-            The first impression
-            <br />
-            is part of the piece.
-          </h2>
-          <p>
-            Designed for gifting and keeping: layered packaging, an authenticity
-            card, stone details, and a considered unboxing that turns arrival
-            into a small ritual.
-          </p>
-          <ul>
-            <li>
-              <span>01</span> Premium presentation box
-            </li>
-            <li>
-              <span>02</span> Stone and intention story
-            </li>
-            <li>
-              <span>03</span> Authenticity details
-            </li>
-            <li>
-              <span>04</span> Made and assembled in India
-            </li>
-          </ul>
-        </Reveal>
+    <section className="py-24 container-luxe bg-card rounded-2xl">
+      <h2 className="text-5xl font-serif mb-12 text-center">Best Sellers</h2>
+      <div className="grid md:grid-cols-4 gap-6">
+        {[1,2,3,4].map(i => (
+          <div key={i} className="bg-background rounded-xl p-4 shadow-lg hover:shadow-2xl transition-shadow">
+            <div className="aspect-square bg-surface rounded-lg mb-4 overflow-hidden">
+                <img src={packTiger} alt="Product" className="w-full h-full object-cover" />
+            </div>
+            <h3 className="font-serif text-lg">Gemstone Bracelet</h3>
+            <div className="flex justify-between items-center mt-2">
+                <span className="text-gold-soft">$120</span>
+                <button className="btn-gold text-xs px-4 py-2">Quick Add</button>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-function JournalAndCircle() {
-  return (
-    <section className="circle-section section-space">
-      <div className="container-luxe circle-grid">
-        <Reveal className="circle-manifesto">
-          <PeacockGlyph />
-          <div className="eyebrow">A quiet house note</div>
-          <blockquote>
-            “What you wear can be decoration. Or it can be a decision.”
-          </blockquote>
-          <p>PASHAN · Haridwar, Uttarakhand</p>
-        </Reveal>
-        <Reveal className="circle-signup" delay={120}>
-          <div className="eyebrow">The PASHAN circle</div>
-          <h2>Occasional correspondence, thoughtfully sent.</h2>
-          <p>
-            New stones, atelier stories, care notes, and early access to limited
-            batches.
-          </p>
-          <form onSubmit={(event) => event.preventDefault()}>
-            <label>
-              <span className="sr-only">Email address</span>
-              <input type="email" required placeholder="Your email address" />
-            </label>
-            <button type="submit">
-              Join the circle <span>→</span>
-            </button>
-          </form>
-        </Reveal>
-      </div>
-    </section>
-  );
+function ShopByIntention() {
+    return (
+        <section className="py-24 container-luxe">
+            <h2 className="text-5xl font-serif mb-12">Shop by Intention</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+                {intentions.slice(0, 3).map(i => (
+                    <div key={i.label} className="p-8 bg-surface rounded-xl border border-border">
+                        <h3 className="text-2xl font-serif mb-2">{i.label}</h3>
+                        <p className="text-muted-foreground text-sm mb-4">Discover stones for {i.label.toLowerCase()}</p>
+                        <button className="text-gold">Explore →</button>
+                    </div>
+                ))}
+            </div>
+        </section>
+    )
+}
+
+function WhyPashan() {
+    return (
+        <section className="py-24 bg-surface">
+            <div className="container-luxe grid md:grid-cols-3 gap-8">
+                {["Natural Stones", "Authenticity", "Handmade"].map(item => (
+                    <div key={item} className="p-6 border border-border rounded-lg">
+                        <h3 className="text-lg font-serif mb-2">{item}</h3>
+                        <p className="text-sm text-muted-foreground">Premium detail explanation here.</p>
+                    </div>
+                ))}
+            </div>
+        </section>
+    )
+}
+
+function PackagingSection() {
+    return (
+        <section className="py-24 container-luxe flex items-center gap-12">
+            <div className="flex-1 aspect-[4/3] bg-surface rounded-2xl overflow-hidden">
+                <img src={ritualGold} alt="Packaging" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex-1">
+                <h2 className="text-5xl font-serif mb-6">The PASHAN Experience</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                    Designed for gifting and keeping: layered packaging, an authenticity card, stone details, and a considered unboxing that turns arrival into a small ritual.
+                </p>
+            </div>
+        </section>
+    )
+}
+
+function JournalSection() {
+    return (
+        <section className="py-24 container-luxe">
+             <h2 className="text-5xl font-serif mb-12">From the Journal</h2>
+             <div className="grid md:grid-cols-3 gap-8">
+                {[1,2,3].map(i => (
+                    <div key={i} className="border border-border rounded-lg p-6">
+                        <div className="h-48 bg-surface rounded-md mb-4" />
+                        <h3 className="font-serif text-xl">Journal Title</h3>
+                    </div>
+                ))}
+             </div>
+        </section>
+    )
+}
+
+function NewsletterSection() {
+    return (
+        <section className="py-24 bg-card text-center">
+            <div className="container-luxe max-w-xl">
+                <h2 className="text-4xl font-serif mb-6">Join the Circle</h2>
+                <p className="text-muted-foreground mb-8">Occasional correspondence, thoughtfully sent.</p>
+                <div className="flex border-b border-border">
+                    <input type="email" placeholder="Your email address" className="bg-transparent flex-1 p-4" />
+                    <button className="text-gold px-4">Join →</button>
+                </div>
+            </div>
+        </section>
+    )
 }
