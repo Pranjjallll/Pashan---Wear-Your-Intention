@@ -8822,3 +8822,95 @@ h3,
     animation: none !important;
   }
 }
+
+/* Final mobile containment pass */
+@media (max-width: 900px) {
+  .hero-object-card {
+    display: none !important;
+  }
+}
+
+@media (max-width: 700px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .premium-hero,
+  .premium-hero-inner,
+  .premium-hero-copy {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .premium-hero-inner {
+    min-height: 52rem;
+    padding-inline: 1.25rem;
+  }
+
+  .premium-hero h1 {
+    max-width: 100%;
+    font-size: 3.35rem;
+    line-height: 0.98;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-overline {
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.56rem;
+    line-height: 1.45;
+  }
+
+  .hero-overline span {
+    width: 1.35rem;
+  }
+
+  .premium-hero-copy > p {
+    max-width: 100%;
+  }
+
+  .hero-actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-actions .btn-gold {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding: 1rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-actions .text-link {
+    width: fit-content;
+  }
+
+  .mobile-menu {
+    overscroll-behavior: contain;
+  }
+
+  .mobile-nav {
+    gap: 1.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .mobile-menu-foot {
+    flex: none;
+  }
+
+  .concierge-shell {
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
+  .concierge-panel {
+    width: min(22rem, calc(100vw - 1.5rem));
+    max-height: min(32rem, calc(100dvh - 6rem));
+  }
+}
