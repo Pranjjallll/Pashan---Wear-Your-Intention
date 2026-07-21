@@ -1,19 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { EditorialStack } from "@/components/EditorialStack";
 import { IntentionBeads } from "@/components/IntentionBeads";
 import { PeacockGlyph } from "@/components/BrandMark";
+import { PackagingShowcase } from "@/components/PackagingShowcase";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 import { collections, intentions } from "@/data/products";
-import heroImage from "@/assets/editorial/ritual-ember.jpg";
-import tigerClose from "@/assets/editorial/tiger-eye-marble.jpg";
-import ritualRed from "@/assets/editorial/ritual-red-certificate.jpg";
-import ritualForest from "@/assets/editorial/ritual-forest.jpg";
-import ritualGold from "@/assets/editorial/ritual-saffron.jpg";
-import ritualTemple from "@/assets/editorial/ritual-temple.jpg";
-import packTiger from "@/assets/editorial/pack-tiger-eye.jpg";
-import packAmethyst from "@/assets/editorial/pack-amethyst.jpg";
+import { useCart } from "@/lib/cart";
+import { WELCOME_OFFER_CODE } from "@/lib/offers";
+import heroImage from "@/assets/brand/packaging-cardboard.webp";
+import packagingOverhead from "@/assets/brand/packaging-overhead.webp";
+import packagingRitual from "@/assets/brand/packaging-ritual.webp";
+import tigerCampaign from "@/assets/products/tiger-eye/05.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,7 +45,7 @@ function Index() {
       <CollectionEdit />
       <HimalayanStory />
       <IntentionFinder />
-      <Presentation />
+      <PackagingShowcase />
       <JournalAndCircle />
     </SiteLayout>
   );
@@ -56,7 +56,7 @@ function Hero() {
     <section className="premium-hero grain">
       <img
         src={heroImage}
-        alt="PASHAN Tiger's Eye bracelet presented in a handcrafted saffron box"
+        alt="Complete PASHAN bracelet presentation in a kraft gifting box"
         className="premium-hero-image"
       />
       <div className="premium-hero-overlay" />
@@ -64,7 +64,7 @@ function Hero() {
       <div className="container-luxe premium-hero-inner">
         <div className="premium-hero-copy">
           <div className="hero-overline">
-            <span /> Himalayan gemstone atelier <span />
+            <span /> Natural gemstone bracelets, made in India <span />
           </div>
           <h1>
             Wear the quality
@@ -76,11 +76,15 @@ function Hero() {
             of courage, balance, focus, and renewal.
           </p>
           <div className="hero-actions">
-            <Link to="/collections" className="btn-gold">
-              Discover the collection <span>↗</span>
+            <Link
+              to="/products/$slug"
+              params={{ slug: "make-your-own" }}
+              className="btn-gold"
+            >
+              Create your personalised bracelet <span>↗</span>
             </Link>
-            <Link to="/find-your-bracelet" className="text-link">
-              Find your stone <span>→</span>
+            <Link to="/collections" className="text-link">
+              Shop all bracelets <span>→</span>
             </Link>
           </div>
         </div>
@@ -90,10 +94,13 @@ function Hero() {
           className="hero-object-card"
         >
           <div className="hero-object-image">
-            <img src={tigerClose} alt="Tiger's Eye bracelet close-up" />
+            <img
+              src={tigerCampaign}
+              alt="Pop-art Tiger Eye bracelet campaign"
+            />
           </div>
           <div>
-            <span>House signature · 01</span>
+            <span>Most loved · 01</span>
             <strong>Tiger's Eye</strong>
             <small>Courage · Focus · Protection</small>
           </div>
@@ -147,7 +154,9 @@ function CollectionEdit() {
       <div className="container-luxe">
         <Reveal className="section-heading split-heading">
           <div>
-            <div className="eyebrow">The complete edit · Ten pieces</div>
+            <div className="eyebrow">
+              The complete edit · Seven stones + one custom piece
+            </div>
             <h2>
               Objects of <em>intention.</em>
             </h2>
@@ -167,7 +176,7 @@ function CollectionEdit() {
         <div className="collection-endnote">
           <PeacockGlyph />
           <span>
-            Natural variation is not a flaw. It is the signature of the stone.
+            Natural variation is not a flaw. It is the character of the stone.
           </span>
           <Link to="/collections">View catalogue details →</Link>
         </div>
@@ -181,8 +190,8 @@ function HimalayanStory() {
     <section className="story-editorial">
       <div className="story-image story-image-main">
         <img
-          src={ritualRed}
-          alt="PASHAN presentation box, Tiger's Eye bracelet and authenticity card"
+          src={packagingRitual}
+          alt="Ivory PASHAN presentation box with bracelet and authenticity details"
         />
       </div>
       <div className="story-copy-panel grain">
@@ -205,7 +214,10 @@ function HimalayanStory() {
         </Reveal>
       </div>
       <div className="story-image story-image-side">
-        <img src={ritualForest} alt="Forest green PASHAN presentation box" />
+        <img
+          src={packagingOverhead}
+          alt="Overhead view of the complete ivory PASHAN presentation"
+        />
       </div>
     </section>
   );
@@ -243,57 +255,15 @@ function IntentionFinder() {
   );
 }
 
-function Presentation() {
-  return (
-    <section className="presentation-section grain">
-      <div className="presentation-collage" aria-hidden>
-        <div>
-          <img src={ritualGold} alt="" />
-        </div>
-        <div>
-          <img src={ritualTemple} alt="" />
-        </div>
-        <div>
-          <img src={packTiger} alt="" />
-        </div>
-        <div>
-          <img src={packAmethyst} alt="" />
-        </div>
-      </div>
-      <div className="container-luxe presentation-copy">
-        <Reveal>
-          <div className="eyebrow">The PASHAN presentation</div>
-          <h2>
-            The first impression
-            <br />
-            is part of the piece.
-          </h2>
-          <p>
-            Designed for gifting and keeping: layered packaging, an authenticity
-            card, stone details, and a considered unboxing that turns arrival
-            into a small ritual.
-          </p>
-          <ul>
-            <li>
-              <span>01</span> Premium presentation box
-            </li>
-            <li>
-              <span>02</span> Stone and intention story
-            </li>
-            <li>
-              <span>03</span> Authenticity details
-            </li>
-            <li>
-              <span>04</span> Made and assembled in India
-            </li>
-          </ul>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function JournalAndCircle() {
+  const { applyOffer } = useCart();
+  const [joined, setJoined] = useState(false);
+
+  const joinCircle = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setJoined(applyOffer(WELCOME_OFFER_CODE).success);
+  };
+
   return (
     <section className="circle-section section-space">
       <div className="container-luxe circle-grid">
@@ -306,21 +276,28 @@ function JournalAndCircle() {
           <p>PASHAN · Haridwar, Uttarakhand</p>
         </Reveal>
         <Reveal className="circle-signup" delay={120}>
-          <div className="eyebrow">The PASHAN circle</div>
-          <h2>Occasional correspondence, thoughtfully sent.</h2>
+          <div className="eyebrow">The daily PASHAN note</div>
+          <h2>Older wisdom, made useful for modern days.</h2>
           <p>
-            New stones, atelier stories, care notes, and early access to limited
-            batches.
+            Daily reflections on grounding rituals, natural traditions, and
+            simple practices for finding steadiness when life feels full. Join
+            the circle and unlock 10% off your first order.
           </p>
-          <form onSubmit={(event) => event.preventDefault()}>
+          <form onSubmit={joinCircle}>
             <label>
               <span className="sr-only">Email address</span>
               <input type="email" required placeholder="Your email address" />
             </label>
             <button type="submit">
-              Join the circle <span>→</span>
+              Unlock 10% off <span>→</span>
             </button>
           </form>
+          {joined ? (
+            <p className="circle-signup-success" role="status">
+              Welcome offer active. Code {WELCOME_OFFER_CODE} is now in your
+              bag.
+            </p>
+          ) : null}
         </Reveal>
       </div>
     </section>

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrackOrderRouteImport } from './routes/track-order'
 import { Route as RitualsRouteImport } from './routes/rituals'
 import { Route as RashiRouteImport } from './routes/rashi'
 import { Route as JournalRouteImport } from './routes/journal'
@@ -22,6 +23,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as CollectionsSlugRouteImport } from './routes/collections.$slug'
 
+const TrackOrderRoute = TrackOrderRouteImport.update({
+  id: '/track-order',
+  path: '/track-order',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RitualsRoute = RitualsRouteImport.update({
   id: '/rituals',
   path: '/rituals',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/journal': typeof JournalRoute
   '/rashi': typeof RashiRoute
   '/rituals': typeof RitualsRoute
+  '/track-order': typeof TrackOrderRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
 }
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/journal': typeof JournalRoute
   '/rashi': typeof RashiRoute
   '/rituals': typeof RitualsRoute
+  '/track-order': typeof TrackOrderRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/journal': typeof JournalRoute
   '/rashi': typeof RashiRoute
   '/rituals': typeof RitualsRoute
+  '/track-order': typeof TrackOrderRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
 }
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/rashi'
     | '/rituals'
+    | '/track-order'
     | '/collections/$slug'
     | '/products/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/rashi'
     | '/rituals'
+    | '/track-order'
     | '/collections/$slug'
     | '/products/$slug'
   id:
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/rashi'
     | '/rituals'
+    | '/track-order'
     | '/collections/$slug'
     | '/products/$slug'
   fileRoutesById: FileRoutesById
@@ -182,11 +194,19 @@ export interface RootRouteChildren {
   JournalRoute: typeof JournalRoute
   RashiRoute: typeof RashiRoute
   RitualsRoute: typeof RitualsRoute
+  TrackOrderRoute: typeof TrackOrderRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/track-order': {
+      id: '/track-order'
+      path: '/track-order'
+      fullPath: '/track-order'
+      preLoaderRoute: typeof TrackOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rituals': {
       id: '/rituals'
       path: '/rituals'
@@ -297,6 +317,7 @@ const rootRouteChildren: RootRouteChildren = {
   JournalRoute: JournalRoute,
   RashiRoute: RashiRoute,
   RitualsRoute: RitualsRoute,
+  TrackOrderRoute: TrackOrderRoute,
   ProductsSlugRoute: ProductsSlugRoute,
 }
 export const routeTree = rootRouteImport

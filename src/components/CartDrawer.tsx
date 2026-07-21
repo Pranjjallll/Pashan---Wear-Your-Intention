@@ -1,9 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { formatPrice, useCart } from "@/lib/cart";
+import { OfferCodeEntry } from "./OfferCodeEntry";
 
 export function CartDrawer() {
-  const { open, setOpen, lines, setQty, remove, subtotal, count } = useCart();
+  const {
+    open,
+    setOpen,
+    lines,
+    setQty,
+    remove,
+    subtotal,
+    discount,
+    total,
+    count,
+  } = useCart();
 
   useEffect(() => {
     if (!open) return;
@@ -32,8 +43,8 @@ export function CartDrawer() {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-[color:var(--border)] px-8 py-6">
             <div>
-              <div className="eyebrow">Atelier Cart</div>
-              <h2 className="font-serif text-2xl mt-1">Your Selection</h2>
+              <div className="eyebrow">Your bag</div>
+              <h2 className="font-serif text-2xl mt-1">Your bracelets</h2>
             </div>
             <button
               onClick={() => setOpen(false)}
@@ -47,7 +58,9 @@ export function CartDrawer() {
             {lines.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <div className="eyebrow mb-3">Quiet for now</div>
-                <p className="font-serif text-2xl">Your cart awaits intention.</p>
+                <p className="font-serif text-2xl">
+                  Your cart awaits intention.
+                </p>
                 <Link
                   to="/collections"
                   onClick={() => setOpen(false)}
@@ -60,7 +73,12 @@ export function CartDrawer() {
               <ul className="divide-y divide-[color:var(--border)]">
                 {lines.map((l) => (
                   <li key={l.slug} className="flex gap-5 py-6">
-                    <img src={l.image} alt={l.name} loading="lazy" className="h-24 w-24 object-cover" />
+                    <img
+                      src={l.image}
+                      alt={l.name}
+                      loading="lazy"
+                      className="h-24 w-24 object-cover"
+                    />
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
                         <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
@@ -86,7 +104,9 @@ export function CartDrawer() {
                             +
                           </button>
                         </div>
-                        <div className="text-sm">{formatPrice(l.price * l.qty)}</div>
+                        <div className="text-sm">
+                          {formatPrice(l.price * l.qty)}
+                        </div>
                       </div>
                       <button
                         onClick={() => remove(l.slug)}
@@ -107,11 +127,24 @@ export function CartDrawer() {
                 <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--muted-foreground)]">
                   Subtotal · {count} {count === 1 ? "piece" : "pieces"}
                 </span>
-                <span className="font-serif text-2xl">{formatPrice(subtotal)}</span>
+                <span className="font-serif text-2xl">
+                  {formatPrice(subtotal)}
+                </span>
+              </div>
+              <OfferCodeEntry compact />
+              {discount > 0 ? (
+                <div className="cart-offer-total">
+                  <span>Offer saving</span>
+                  <strong>-{formatPrice(discount)}</strong>
+                </div>
+              ) : null}
+              <div className="cart-grand-total">
+                <span>Total</span>
+                <strong>{formatPrice(total)}</strong>
               </div>
               <p className="text-xs text-[color:var(--muted-foreground)] mb-5">
-                Each order includes a complimentary bottle of Ganga Jal and the PASHAN
-                presentation suite.
+                Each order includes a complimentary bottle of Ganga Jal and the
+                PASHAN presentation suite.
               </p>
               <Link
                 to="/checkout"

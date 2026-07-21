@@ -81,7 +81,16 @@ declare global {
 }
 
 function CheckoutPage() {
-  const { lines, subtotal, count, clear } = useCart();
+  const {
+    lines,
+    subtotal,
+    discount,
+    total,
+    offerCode,
+    count,
+    clear,
+    clearOffer,
+  } = useCart();
   const createOrder = useServerFn(createRazorpayOrder);
   const verifyPayment = useServerFn(verifyRazorpayPayment);
   const [placed, setPlaced] = useState(false);
@@ -123,6 +132,7 @@ function CheckoutPage() {
         data: {
           lines: lines.map((line) => ({ slug: line.slug, qty: line.qty })),
           customer,
+          offerCode: offerCode ?? undefined,
         },
       });
 
@@ -180,6 +190,7 @@ function CheckoutPage() {
               setStatus("paid");
               setPlaced(true);
               clear();
+              clearOffer();
             })
             .catch((error: unknown) => {
               setStatus("failed");
@@ -320,7 +331,7 @@ function CheckoutPage() {
                       : "Pay securely with Razorpay"}
                 </button>
                 <p className="text-center text-xs uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">
-                  Total due today: {formatPrice(subtotal)}
+                  Total due today: {formatPrice(total)}
                 </p>
               </div>
             </Section>
@@ -362,7 +373,14 @@ function CheckoutPage() {
                 label={`Subtotal · ${count} ${count === 1 ? "piece" : "pieces"}`}
                 value={formatPrice(subtotal)}
               />
-              <Row label="Concierge Shipping" value="Complimentary" gold />
+              {discount > 0 ? (
+                <Row
+                  label={`Offer · ${offerCode}`}
+                  value={`-${formatPrice(discount)}`}
+                  gold
+                />
+              ) : null}
+              <Row label="Standard shipping" value="Complimentary" gold />
               <Row label="Ganga Jal Inclusion" value="Included" gold />
               <Row
                 label="Stone story & intention cards"
@@ -373,9 +391,7 @@ function CheckoutPage() {
             <div className="hairline my-6" />
             <div className="flex items-baseline justify-between">
               <span className="eyebrow">Total</span>
-              <span className="font-serif text-2xl">
-                {formatPrice(subtotal)}
-              </span>
+              <span className="font-serif text-2xl">{formatPrice(total)}</span>
             </div>
             <div className="mt-6 border border-[color:var(--border)] p-4 text-xs leading-relaxed text-[color:var(--muted-foreground)]">
               Every order arrives with the PASHAN presentation suite — premium

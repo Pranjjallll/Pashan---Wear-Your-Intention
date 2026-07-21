@@ -19,6 +19,7 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
         qty: Number(line.qty),
       })),
       customer: data.customer,
+      offerCode: data.offerCode ? String(data.offerCode) : undefined,
     };
   })
   .handler(async ({ data }) => createTrustedRazorpayOrder(data));

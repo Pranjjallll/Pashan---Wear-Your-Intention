@@ -2,14 +2,15 @@ import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import { collections } from "@/data/products";
-import { formatPrice } from "@/lib/cart";
+import type { Collection } from "@/data/products";
+import { LaunchPrice } from "./LaunchPrice";
 
 const featuredSlugs = [
   "tiger-eye",
   "pyrite",
   "amethyst",
   "green-quartz",
-  "seven-chakra",
+  "dhan-yog",
   "hematite",
 ];
 
@@ -18,7 +19,7 @@ export function IntentionBeads() {
     () =>
       featuredSlugs
         .map((slug) => collections.find((product) => product.slug === slug))
-        .filter(Boolean),
+        .filter((product): product is Collection => Boolean(product)),
     [],
   );
   const [activeIndex, setActiveIndex] = useState(0);
@@ -82,7 +83,11 @@ export function IntentionBeads() {
               >
                 Explore {active.stone}
               </Link>
-              <span>{formatPrice(active.price)}</span>
+              <LaunchPrice
+                price={active.price}
+                compareAtPrice={active.compareAtPrice}
+                compact
+              />
             </div>
           </div>
         </div>

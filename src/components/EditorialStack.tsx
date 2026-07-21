@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import pyriteAtelier from "@/assets/editorial/pyrite-atelier.jpg";
@@ -8,13 +9,13 @@ import tigerWood from "@/assets/editorial/tiger-eye-wood.jpg";
 const slides = [
   {
     title: "The Abundance Collection",
-    stones: "Pyrite · Citrine · Green Quartz",
+    stones: "Pyrite · Green Quartz · Dhan Yog",
     image: pyriteAtelier,
     href: "/collections",
   },
   {
     title: "The Calm Collection",
-    stones: "Amethyst · Green Quartz · 7 Chakra",
+    stones: "Amethyst · Green Quartz · Hematite",
     image: packAmethyst,
     href: "/find-your-bracelet",
   },
@@ -46,7 +47,7 @@ export function EditorialStack() {
         onClick={() => move(-1)}
         aria-label="Previous collection mood"
       >
-        ‹
+        <ChevronLeft aria-hidden size={24} />
       </button>
       <div className="container-luxe editorial-stack-layout">
         <div className="editorial-stack-copy">
@@ -96,7 +97,7 @@ export function EditorialStack() {
         onClick={() => move(1)}
         aria-label="Next collection mood"
       >
-        ›
+        <ChevronRight aria-hidden size={24} />
       </button>
     </section>
   );

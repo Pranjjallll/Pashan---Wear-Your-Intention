@@ -1,4 +1,21 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { collections } from "@/data/products";
+import {
+  BASKET_OFFER_CODE,
+  BASKET_OFFER_MINIMUM,
+  WELCOME_OFFER_CODE,
+  calculateOfferDiscount,
+  normalizeOfferCode,
+  type OfferCode,
+} from "./offers";
 
 export interface CartLine {
   slug: string;
@@ -17,23 +34,48 @@ interface CartCtx {
   clear: () => void;
   count: number;
   subtotal: number;
+  discount: number;
+  total: number;
+  offerCode: OfferCode | null;
+  applyOffer: (code: string) => { success: boolean; message: string };
+  clearOffer: () => void;
   open: boolean;
   setOpen: (v: boolean) => void;
 }
 
 const Ctx = createContext<CartCtx | null>(null);
 const STORAGE_KEY = "pashan-cart-v1";
+const OFFER_STORAGE_KEY = "pashan-offer-v1";
+const currentPrices = new Map(
+  collections.map((product) => [product.slug, product.price]),
+);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
+  const [offerCode, setOfferCode] = useState<OfferCode | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     try {
-      const raw = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
-      if (raw) setLines(JSON.parse(raw));
-    } catch {}
+      const raw =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem(STORAGE_KEY)
+          : null;
+      if (raw) {
+        const saved = JSON.parse(raw) as CartLine[];
+        setLines(
+          saved.map((line) => ({
+            ...line,
+            price: currentPrices.get(line.slug) ?? line.price,
+          })),
+        );
+      }
+      const savedOffer = window.localStorage.getItem(OFFER_STORAGE_KEY);
+      setOfferCode(normalizeOfferCode(savedOffer));
+    } catch {
+      // Storage can be unavailable in privacy-restricted browsers.
+    }
     setReady(true);
   }, []);
 
@@ -41,14 +83,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!ready) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-    } catch {}
+    } catch {
+      // Storage can be unavailable in privacy-restricted browsers.
+    }
   }, [lines, ready]);
+
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      if (offerCode) window.localStorage.setItem(OFFER_STORAGE_KEY, offerCode);
+      else window.localStorage.removeItem(OFFER_STORAGE_KEY);
+    } catch {
+      // Storage can be unavailable in privacy-restricted browsers.
+    }
+  }, [offerCode, ready]);
 
   const add = useCallback((line: Omit<CartLine, "qty">, qty = 1) => {
     setLines((cur) => {
       const existing = cur.find((l) => l.slug === line.slug);
       if (existing) {
-        return cur.map((l) => (l.slug === line.slug ? { ...l, qty: l.qty + qty } : l));
+        return cur.map((l) =>
+          l.slug === line.slug ? { ...l, qty: l.qty + qty } : l,
+        );
       }
       return [...cur, { ...line, qty }];
     });
@@ -69,6 +125,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = useCallback(() => setLines([]), []);
 
+  const applyOffer = useCallback((value: string) => {
+    const code = normalizeOfferCode(value);
+    if (!code) {
+      return { success: false, message: "That offer code is not recognised." };
+    }
+    setOfferCode(code);
+    if (code === WELCOME_OFFER_CODE) {
+      return { success: true, message: "Your 10% welcome offer is active." };
+    }
+    return {
+      success: true,
+      message: `Your ₹200 offer is saved and activates at ₹${BASKET_OFFER_MINIMUM.toLocaleString("en-IN")}.`,
+    };
+  }, []);
+
+  const clearOffer = useCallback(() => setOfferCode(null), []);
+
   const { count, subtotal } = useMemo(() => {
     let c = 0;
     let s = 0;
@@ -79,7 +152,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return { count: c, subtotal: s };
   }, [lines]);
 
-  const value: CartCtx = { lines, add, remove, setQty, clear, count, subtotal, open, setOpen };
+  const discount = calculateOfferDiscount(subtotal, offerCode);
+  const total = Math.max(0, subtotal - discount);
+  const value: CartCtx = {
+    lines,
+    add,
+    remove,
+    setQty,
+    clear,
+    count,
+    subtotal,
+    discount,
+    total,
+    offerCode,
+    applyOffer,
+    clearOffer,
+    open,
+    setOpen,
+  };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
@@ -90,4 +180,8 @@ export function useCart() {
 }
 
 export const formatPrice = (n: number) =>
-  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(n);

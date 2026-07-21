@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { LaunchPrice } from "@/components/LaunchPrice";
 import { collections, getCollection } from "@/data/products";
 import { formatPrice, useCart } from "@/lib/cart";
 import gangajal from "@/assets/gangajal.jpg";
@@ -25,8 +26,12 @@ export const Route = createFileRoute("/collections/$slug")({
     <SiteLayout>
       <div className="container-luxe py-40 text-center">
         <div className="eyebrow">Not Found</div>
-        <h1 className="mt-4 font-serif text-4xl">This collection could not be located.</h1>
-        <Link to="/collections" className="btn-ghost mt-8 inline-flex">All Collections</Link>
+        <h1 className="mt-4 font-serif text-4xl">
+          This collection could not be located.
+        </h1>
+        <Link to="/collections" className="btn-ghost mt-8 inline-flex">
+          All Collections
+        </Link>
       </div>
     </SiteLayout>
   ),
@@ -34,7 +39,9 @@ export const Route = createFileRoute("/collections/$slug")({
     <SiteLayout>
       <div className="container-luxe py-40 text-center">
         <h1 className="font-serif text-3xl">Something went wrong.</h1>
-        <button onClick={reset} className="btn-ghost mt-8">Try Again</button>
+        <button onClick={reset} className="btn-ghost mt-8">
+          Try Again
+        </button>
       </div>
     </SiteLayout>
   ),
@@ -49,7 +56,10 @@ function CollectionPage() {
   return (
     <SiteLayout>
       <section className="container-luxe pt-8">
-        <Link to="/collections" className="text-[0.7rem] uppercase tracking-[0.24em] text-[color:var(--muted-foreground)] hover:text-[color:var(--gold)]">
+        <Link
+          to="/collections"
+          className="text-[0.7rem] uppercase tracking-[0.24em] text-[color:var(--muted-foreground)] hover:text-[color:var(--gold)]"
+        >
           ← All Collections
         </Link>
       </section>
@@ -57,24 +67,36 @@ function CollectionPage() {
       <section className="container-luxe pt-10 pb-20">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
           <div className="relative aspect-square bg-[color:var(--surface)] overflow-hidden">
-            <img src={c.image} alt={`${c.stone} bracelet`} className="absolute inset-0 h-full w-full object-cover" />
+            <img
+              src={c.image}
+              alt={`${c.stone} bracelet`}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </div>
           <div className="lg:py-8">
             <div className="eyebrow">{c.name} Collection</div>
             <h1 className="mt-5 font-serif text-[clamp(2.25rem,5vw,4rem)] leading-[1.05]">
-              {c.stone} <span className="italic text-[color:var(--gold)]">Bracelet</span>
+              {c.stone}{" "}
+              <span className="italic text-[color:var(--gold)]">Bracelet</span>
             </h1>
-            <p className="mt-5 text-lg text-[color:var(--gold)] italic">{c.intention}</p>
+            <p className="mt-5 text-lg text-[color:var(--gold)] italic">
+              {c.intention}
+            </p>
 
             <div className="hairline my-8 max-w-[8rem]" />
 
-            <p className="text-[color:var(--muted-foreground)] leading-relaxed">{c.story}</p>
+            <p className="text-[color:var(--muted-foreground)] leading-relaxed">
+              {c.story}
+            </p>
 
             <div className="mt-8">
               <div className="eyebrow">Traditionally Associated With</div>
               <div className="mt-4 flex flex-wrap gap-2">
                 {c.qualities.map((q: string) => (
-                  <span key={q} className="border border-[color:var(--border)] px-4 py-2 text-xs tracking-[0.16em] uppercase text-[color:var(--muted-foreground)]">
+                  <span
+                    key={q}
+                    className="border border-[color:var(--border)] px-4 py-2 text-xs tracking-[0.16em] uppercase text-[color:var(--muted-foreground)]"
+                  >
                     {q}
                   </span>
                 ))}
@@ -82,18 +104,32 @@ function CollectionPage() {
             </div>
 
             <div className="mt-10 flex items-baseline gap-4">
-              <span className="font-serif text-3xl">{formatPrice(c.price)}</span>
-              <span className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Includes complimentary Ganga Jal</span>
+              <LaunchPrice price={c.price} compareAtPrice={c.compareAtPrice} />
+              <span className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
+                Includes complimentary Ganga Jal
+              </span>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
               <button
-                onClick={() => add({ slug: c.slug, name: c.title, stone: c.stone, price: c.price, image: c.image })}
+                onClick={() =>
+                  add({
+                    slug: c.slug,
+                    name: c.title,
+                    stone: c.stone,
+                    price: c.price,
+                    image: c.image,
+                  })
+                }
                 className="btn-gold"
               >
                 Add to Cart
               </button>
-              <Link to="/products/$slug" params={{ slug: c.slug }} className="btn-ghost">
+              <Link
+                to="/products/$slug"
+                params={{ slug: c.slug }}
+                className="btn-ghost"
+              >
                 Product Details
               </Link>
             </div>
@@ -105,16 +141,24 @@ function CollectionPage() {
         <div className="container-luxe grid gap-12 md:grid-cols-2 lg:gap-20">
           <div>
             <div className="eyebrow">The Ritual</div>
-            <h2 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">When to wear it.</h2>
-            <p className="mt-6 text-[color:var(--muted-foreground)] leading-relaxed">{c.ritual}</p>
+            <h2 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
+              When to wear it.
+            </h2>
+            <p className="mt-6 text-[color:var(--muted-foreground)] leading-relaxed">
+              {c.ritual}
+            </p>
           </div>
           <div>
             <div className="eyebrow">The Stone</div>
-            <h2 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">{c.stone}.</h2>
+            <h2 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
+              {c.stone}.
+            </h2>
             <p className="mt-6 text-[color:var(--muted-foreground)] leading-relaxed">
-              Long valued for its quiet symbolism, {c.stone.toLowerCase()} has historically
-              been associated with {c.qualities.map((q: string) => q.toLowerCase()).join(", ")}. PASHAN
-              selects each stone for natural quality and finishes each piece by hand.
+              Long valued for its quiet symbolism, {c.stone.toLowerCase()} has
+              historically been associated with{" "}
+              {c.qualities.map((q: string) => q.toLowerCase()).join(", ")}.
+              PASHAN selects each stone for natural quality and finishes each
+              piece by hand.
             </p>
           </div>
         </div>
@@ -123,14 +167,23 @@ function CollectionPage() {
       <section className="container-luxe py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <div className="relative aspect-[5/4] overflow-hidden">
-            <img src={gangajal} alt="Complimentary Ganga Jal bottle" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            <img
+              src={gangajal}
+              alt="Complimentary Ganga Jal bottle"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </div>
           <div>
             <div className="eyebrow">Included With Every Order</div>
-            <h2 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">A complimentary bottle of <span className="italic text-[color:var(--gold)]">Ganga Jal</span>.</h2>
+            <h2 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
+              A complimentary bottle of{" "}
+              <span className="italic text-[color:var(--gold)]">Ganga Jal</span>
+              .
+            </h2>
             <p className="mt-6 text-[color:var(--muted-foreground)] leading-relaxed">
-              A symbolic offering inspired by India's spiritual heritage and traditions —
-              presented as part of the PASHAN suite.
+              A symbolic offering inspired by India's spiritual heritage and
+              traditions — presented as part of the PASHAN suite.
             </p>
           </div>
         </div>
@@ -138,19 +191,37 @@ function CollectionPage() {
 
       <section className="container-luxe pb-32">
         <div className="eyebrow">Other Collections</div>
-        <h2 className="mt-3 font-serif text-3xl md:text-4xl">Continue exploring.</h2>
+        <h2 className="mt-3 font-serif text-3xl md:text-4xl">
+          Continue exploring.
+        </h2>
         <div className="mt-10 grid gap-10 md:grid-cols-3">
           {related.map((r) => (
-            <Link key={r.slug} to="/collections/$slug" params={{ slug: r.slug }} className="group block">
+            <Link
+              key={r.slug}
+              to="/collections/$slug"
+              params={{ slug: r.slug }}
+              className="group block"
+            >
               <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--surface)]">
-                <img src={r.image} alt={r.stone} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
+                <img
+                  src={r.image}
+                  alt={r.stone}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110"
+                />
               </div>
               <div className="mt-4 flex items-center justify-between">
                 <div>
-                  <div className="text-[0.65rem] uppercase tracking-[0.24em] text-[color:var(--gold)]">{r.name}</div>
+                  <div className="text-[0.65rem] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                    {r.name}
+                  </div>
                   <div className="font-serif text-xl mt-1">{r.stone}</div>
                 </div>
-                <span className="text-sm text-[color:var(--muted-foreground)]">{formatPrice(r.price)}</span>
+                <LaunchPrice
+                  price={r.price}
+                  compareAtPrice={r.compareAtPrice}
+                  compact
+                />
               </div>
             </Link>
           ))}

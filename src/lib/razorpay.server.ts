@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 
 import { collections } from "@/data/products";
+import { calculateOfferDiscount, normalizeOfferCode } from "@/lib/offers";
 
 const CURRENCY = "INR";
 const RAZORPAY_ORDERS_URL = "https://api.razorpay.com/v1/orders";
@@ -22,6 +23,7 @@ export interface CheckoutCustomerInput {
 export interface CreateRazorpayOrderInput {
   lines: CheckoutLineInput[];
   customer?: CheckoutCustomerInput;
+  offerCode?: string;
 }
 
 export interface VerifyRazorpayPaymentInput {
@@ -94,7 +96,7 @@ function normalizeCheckoutLines(lines: CheckoutLineInput[]) {
   return [...merged.entries()].map(([slug, qty]) => ({ slug, qty }));
 }
 
-function buildTrustedCheckout(lines: CheckoutLineInput[]) {
+function buildTrustedCheckout(lines: CheckoutLineInput[], offerCode?: string) {
   const items: TrustedCheckoutItem[] = normalizeCheckoutLines(lines).map(
     ({ slug, qty }) => {
       const product = productBySlug.get(slug);
@@ -117,10 +119,19 @@ function buildTrustedCheckout(lines: CheckoutLineInput[]) {
     },
   );
 
-  const totalInRupees = items.reduce(
+  const subtotalInRupees = items.reduce(
     (total, item) => total + item.lineAmount,
     0,
   );
+  const normalizedOffer = normalizeOfferCode(offerCode);
+  if (offerCode && !normalizedOffer) {
+    throw new Error("The offer code is not valid.");
+  }
+  const discountInRupees = calculateOfferDiscount(
+    subtotalInRupees,
+    normalizedOffer,
+  );
+  const totalInRupees = Math.max(0, subtotalInRupees - discountInRupees);
   const amount = totalInRupees * 100;
 
   if (!Number.isInteger(amount) || amount < MINIMUM_INR_SUBUNITS) {
@@ -131,6 +142,9 @@ function buildTrustedCheckout(lines: CheckoutLineInput[]) {
     amount,
     currency: CURRENCY,
     items,
+    subtotalInRupees,
+    discountInRupees,
+    offerCode: normalizedOffer,
     totalInRupees,
     count: items.reduce((total, item) => total + item.qty, 0),
   };
@@ -156,7 +170,7 @@ export async function createTrustedRazorpayOrder(
   input: CreateRazorpayOrderInput,
 ) {
   const { keyId, keySecret } = getRazorpayKeys();
-  const checkout = buildTrustedCheckout(input.lines);
+  const checkout = buildTrustedCheckout(input.lines, input.offerCode);
   const customer = safeCustomer(input.customer);
 
   const response = await fetch(RAZORPAY_ORDERS_URL, {
@@ -173,6 +187,7 @@ export async function createTrustedRazorpayOrder(
         brand: "PASHAN",
         source: "website_checkout",
         customer_email: customer.email,
+        offer_code: checkout.offerCode ?? "none",
         items: checkout.items
           .map((item) => `${item.slug}x${item.qty}`)
           .join(","),
@@ -203,6 +218,9 @@ export async function createTrustedRazorpayOrder(
     currency: checkout.currency,
     display: {
       count: checkout.count,
+      subtotalInRupees: checkout.subtotalInRupees,
+      discountInRupees: checkout.discountInRupees,
+      offerCode: checkout.offerCode,
       totalInRupees: checkout.totalInRupees,
       items: checkout.items,
     },

@@ -100,7 +100,7 @@ export function OpeningRitual() {
         </div>
       </div>
       <button type="button" onClick={finish} className="ritual-skip">
-        Enter atelier
+        Explore PASHAN
       </button>
     </div>
   );

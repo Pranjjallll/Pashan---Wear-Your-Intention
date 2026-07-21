@@ -1,104 +1,262 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Rotate3D,
+  Sparkles,
+} from "lucide-react";
+import { useState, type CSSProperties, type PointerEvent } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { collections, intentions, getCollection } from "@/data/products";
+import { collections } from "@/data/products";
+import { LaunchPrice } from "@/components/LaunchPrice";
 
 export const Route = createFileRoute("/find-your-bracelet")({
   head: () => ({
     meta: [
-      { title: "Find Your Bracelet — PASHAN" },
-      { name: "description", content: "A guided experience to discover the PASHAN collection aligned to the quality you seek." },
-      { property: "og:title", content: "Find Your Bracelet — PASHAN" },
-      { property: "og:description", content: "Tell us what you are seeking. We will recommend the right collection." },
+      { title: "Virtual Bracelet Studio - PASHAN" },
+      {
+        name: "description",
+        content:
+          "Explore seven PASHAN natural-stone bracelets in an interactive virtual studio.",
+      },
+      { property: "og:title", content: "Virtual Bracelet Studio - PASHAN" },
+      {
+        property: "og:description",
+        content:
+          "Move through the seven PASHAN stones and discover the qualities traditionally associated with each one.",
+      },
     ],
   }),
   component: FindPage,
 });
 
+const bracelets = collections.filter((collection) => !collection.isCustom);
+const orbitBeads = Array.from({ length: 18 }, (_, index) => index);
+
 function FindPage() {
-  const [choice, setChoice] = useState<string | null>(null);
-  const recommended = choice ? getCollection(intentions.find((i) => i.key === choice)!.slug) : null;
-  const alts = recommended ? collections.filter((c) => c.slug !== recommended.slug).slice(0, 2) : [];
+  const [activeIndex, setActiveIndex] = useState(1);
+  const [view, setView] = useState<"live" | "detail">("live");
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const active = bracelets[activeIndex] ?? bracelets[0];
+
+  if (!active) return null;
+
+  const previewImage =
+    view === "live" ? (active.images[1] ?? active.image) : active.image;
+
+  const chooseIndex = (index: number) => {
+    setActiveIndex(index);
+    setTilt({ x: 0, y: 0 });
+  };
+
+  const moveSelection = (direction: -1 | 1) => {
+    chooseIndex(
+      (activeIndex + direction + bracelets.length) % bracelets.length,
+    );
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    setTilt({
+      x: ((event.clientY - bounds.top) / bounds.height - 0.5) * -8,
+      y: ((event.clientX - bounds.left) / bounds.width - 0.5) * 10,
+    });
+  };
+
+  const previewStyle = {
+    "--studio-tilt-x": `${tilt.x}deg`,
+    "--studio-tilt-y": `${tilt.y}deg`,
+  } as CSSProperties;
 
   return (
     <SiteLayout>
-      <section className="container-luxe py-20 md:py-28">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="eyebrow">The Concierge</div>
-          <h1 className="mt-5 font-serif text-[clamp(2.25rem,5vw,4rem)] leading-[1.05]">
-            What are you seeking <span className="italic text-[color:var(--gold)]">to embody?</span>
-          </h1>
-          <p className="mt-6 text-[color:var(--muted-foreground)] leading-relaxed">
-            Choose the quality most present in your life right now. We will suggest the
-            collection most aligned to it.
-          </p>
+      <section className="virtual-finder">
+        <div className="container-luxe virtual-finder-intro">
+          <div>
+            <span className="finder-kicker">The Pashan Stone Quest</span>
+            <h1>
+              Meet all seven.
+              <br />
+              <em>Notice what calls you.</em>
+            </h1>
+          </div>
+          <div className="finder-intro-copy">
+            <p>
+              Select a bracelet, move the live view, and reveal the qualities
+              traditionally associated with its natural stone.
+            </p>
+            <span>
+              <Sparkles size={15} aria-hidden /> Seven stones / one intention
+            </span>
+          </div>
         </div>
 
-        <div className="mt-14 grid gap-px bg-[color:var(--border)] sm:grid-cols-2 lg:grid-cols-3">
-          {intentions.map((i) => {
-            const active = choice === i.key;
-            return (
+        <div className="container-luxe virtual-studio-shell">
+          <nav
+            className="stone-selector"
+            aria-label="Choose a bracelet to preview"
+            role="tablist"
+          >
+            {bracelets.map((bracelet, index) => (
               <button
-                key={i.key}
-                onClick={() => setChoice(i.key)}
-                className={`relative text-left bg-[color:var(--background)] p-8 md:p-10 transition-colors duration-500 ${
-                  active ? "bg-[color:var(--elevated)]" : "hover:bg-[color:var(--surface)]"
-                }`}
+                key={bracelet.slug}
+                type="button"
+                role="tab"
+                aria-selected={index === activeIndex}
+                aria-controls="virtual-bracelet-stage"
+                className={index === activeIndex ? "is-active" : ""}
+                onClick={() => chooseIndex(index)}
               >
-                <div className={`eyebrow ${active ? "" : "opacity-60"}`}>I am seeking</div>
-                <div className="mt-4 font-serif text-3xl">{i.label}</div>
-                {active && <div className="mt-6 text-[0.7rem] uppercase tracking-[0.24em] text-[color:var(--gold)]">Selected ·</div>}
+                <span className="stone-selector-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="stone-selector-thumb">
+                  <img src={bracelet.image} alt="" />
+                </span>
+                <span>
+                  <strong>{bracelet.stone}</strong>
+                  <small>{bracelet.name}</small>
+                </span>
               </button>
-            );
-          })}
-        </div>
+            ))}
+          </nav>
 
-        {recommended && (
-          <div className="mt-20 border border-[color:var(--border)] bg-[color:var(--surface)] p-8 md:p-12">
-            <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16 items-center">
-              <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--background)]">
-                <img src={recommended.image} alt={recommended.stone} className="absolute inset-0 h-full w-full object-cover" />
-              </div>
+          <div className="virtual-studio-main">
+            <div className="studio-toolbar">
               <div>
-                <div className="eyebrow">Recommended</div>
-                <h2 className="mt-4 font-serif text-[clamp(2rem,4vw,3.25rem)] leading-tight">
-                  {recommended.title}
-                </h2>
-                <p className="mt-3 text-[color:var(--gold)] italic">{recommended.intention}</p>
-                <p className="mt-6 text-[color:var(--muted-foreground)] leading-relaxed">{recommended.story}</p>
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <Link to="/collections/$slug" params={{ slug: recommended.slug }} className="btn-gold">
-                    View the Collection
-                  </Link>
-                  <Link to="/products/$slug" params={{ slug: recommended.slug }} className="btn-ghost">
-                    Product Details
-                  </Link>
-                </div>
+                <i aria-hidden />
+                Live bracelet view
+              </div>
+              <div className="studio-view-toggle" aria-label="Preview mode">
+                <button
+                  type="button"
+                  className={view === "live" ? "is-active" : ""}
+                  onClick={() => setView("live")}
+                  aria-pressed={view === "live"}
+                >
+                  Live view
+                </button>
+                <button
+                  type="button"
+                  className={view === "detail" ? "is-active" : ""}
+                  onClick={() => setView("detail")}
+                  aria-pressed={view === "detail"}
+                >
+                  Stone detail
+                </button>
               </div>
             </div>
-            {alts.length > 0 && (
-              <div className="mt-12 border-t border-[color:var(--border)] pt-8">
-                <div className="eyebrow mb-5">You may also consider</div>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {alts.map((a) => (
-                    <Link
-                      key={a.slug}
-                      to="/collections/$slug"
-                      params={{ slug: a.slug }}
-                      className="flex items-center gap-5 group"
-                    >
-                      <img src={a.image} alt="" className="h-20 w-20 object-cover" loading="lazy" />
-                      <div>
-                        <div className="text-[0.65rem] uppercase tracking-[0.24em] text-[color:var(--gold)]">{a.name}</div>
-                        <div className="font-serif text-lg mt-1 group-hover:text-[color:var(--gold)] transition-colors">{a.stone}</div>
-                      </div>
-                    </Link>
-                  ))}
+
+            <div
+              id="virtual-bracelet-stage"
+              className={`virtual-bracelet-stage tone-${active.tone}`}
+              role="tabpanel"
+              onPointerMove={handlePointerMove}
+              onPointerLeave={() => setTilt({ x: 0, y: 0 })}
+              style={previewStyle}
+            >
+              <div className="studio-halo" aria-hidden />
+              <div className="studio-orbit" aria-hidden>
+                {orbitBeads.map((bead) => (
+                  <i key={bead} style={{ "--bead": bead } as CSSProperties} />
+                ))}
+              </div>
+              <div className="studio-wrist" aria-hidden />
+              <div
+                className="studio-product-frame"
+                key={`${active.slug}-${view}`}
+              >
+                <img
+                  src={previewImage}
+                  alt={`${active.stone} bracelet ${view === "live" ? "live preview" : "stone detail"}`}
+                />
+              </div>
+
+              <div className="studio-benefits" key={active.slug}>
+                {active.qualities.map((quality, index) => (
+                  <span
+                    key={quality}
+                    style={{ animationDelay: `${160 + index * 130}ms` }}
+                  >
+                    <i>{String(index + 1).padStart(2, "0")}</i>
+                    {quality}
+                  </span>
+                ))}
+              </div>
+
+              <div className="studio-move-hint">
+                <Rotate3D size={17} aria-hidden />
+                Move across the image
+              </div>
+            </div>
+
+            <div className="studio-discovery">
+              <div className="studio-progress-copy">
+                <span>
+                  Stone {String(activeIndex + 1).padStart(2, "0")} of{" "}
+                  {String(bracelets.length).padStart(2, "0")}
+                </span>
+                <div className="studio-progress-track" aria-hidden>
+                  <i
+                    style={{
+                      width: `${((activeIndex + 1) / bracelets.length) * 100}%`,
+                    }}
+                  />
                 </div>
               </div>
-            )}
+
+              <div className="studio-story" key={`story-${active.slug}`}>
+                <span>{active.name}</span>
+                <h2>{active.stone}</h2>
+                <p>{active.story}</p>
+                <div className="studio-meta">
+                  <span>{active.fit}</span>
+                  <LaunchPrice
+                    price={active.price}
+                    compareAtPrice={active.compareAtPrice}
+                    compact
+                  />
+                </div>
+              </div>
+
+              <div className="studio-actions">
+                <div className="studio-stepper">
+                  <button
+                    type="button"
+                    onClick={() => moveSelection(-1)}
+                    aria-label="View previous bracelet"
+                  >
+                    <ChevronLeft aria-hidden size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveSelection(1)}
+                    aria-label="View next bracelet"
+                  >
+                    <ChevronRight aria-hidden size={20} />
+                  </button>
+                </div>
+                <Link
+                  to="/products/$slug"
+                  params={{ slug: active.slug }}
+                  className="studio-product-link"
+                >
+                  Choose {active.stone}
+                  <ArrowRight aria-hidden size={18} />
+                </Link>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
+
+        <div className="container-luxe finder-footnote">
+          <p>
+            Natural stones are described through traditional associations, not
+            medical claims. The best choice is the one you will enjoy wearing.
+          </p>
+          <Link to="/collections">See all seven together</Link>
+        </div>
       </section>
     </SiteLayout>
   );
