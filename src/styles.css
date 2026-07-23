@@ -7135,40 +7135,28 @@ h3,
   z-index: 2;
   width: 19rem;
   aspect-ratio: 4 / 5;
-  transform: rotateX(var(--studio-tilt-x)) rotateY(var(--studio-tilt-y));
+  transform: translate(
+    var(--studio-shift-x, 0),
+    var(--studio-shift-y, 0)
+  );
   transition: transform 120ms ease-out;
   animation: studio-product-enter 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  perspective: 1200px;
 }
 
-.studio-card-inner {
+.studio-card-single {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   border: 2px solid var(--brand-ivory);
   background: var(--paper-deep);
   box-shadow:
     0 1.5rem 3.5rem rgba(55, 22, 10, 0.32),
     0.65rem 0.65rem 0 var(--stage-accent);
-  transform-style: preserve-3d;
-  transition: transform 720ms cubic-bezier(0.2, 0.75, 0.2, 1);
-}
-
-.studio-product-frame.is-flipped .studio-card-inner {
-  transform: rotateY(180deg);
-}
-
-.studio-card-face {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform-style: preserve-3d;
+  animation: studio-card-reveal 440ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
 }
 
 .studio-card-front {
   background: var(--paper-deep);
-  transform: rotateY(0deg) translateZ(1px);
 }
 
 .studio-card-back {
@@ -7183,7 +7171,6 @@ h3,
     var(--brand-ivory);
   background-size: 24px 24px;
   color: var(--brand-brown);
-  transform: rotateY(180deg) translateZ(1px);
 }
 
 .studio-card-back > span,
@@ -7254,24 +7241,11 @@ h3,
   min-width: 8.75rem;
   min-height: 3rem;
   opacity: 0;
-  perspective: 700px;
   animation: studio-benefit-pop 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.studio-benefit-card > div {
-  position: relative;
-  min-height: 3rem;
-  display: grid;
-  transform-style: preserve-3d;
-  transition: transform 620ms cubic-bezier(0.2, 0.75, 0.2, 1);
-}
-
-.studio-benefit-card.is-flipped > div {
-  transform: rotateX(180deg);
-}
-
 .studio-benefit-card span {
-  grid-area: 1 / 1;
+  width: 100%;
   min-height: 3rem;
   display: flex;
   align-items: center;
@@ -7281,7 +7255,6 @@ h3,
   background: var(--brand-ivory);
   color: var(--ink);
   box-shadow: 0.28rem 0.28rem 0 var(--brand-gold);
-  backface-visibility: hidden;
 }
 
 .studio-benefit-front {
@@ -7295,7 +7268,6 @@ h3,
   font-size: 0.64rem;
   font-weight: 700;
   line-height: 1.35;
-  transform: rotateX(180deg);
 }
 
 .studio-benefit-card:nth-child(1) {
@@ -7749,13 +7721,18 @@ h3,
 @keyframes studio-product-enter {
   from {
     opacity: 0;
-    transform: translateY(1rem) rotateX(var(--studio-tilt-x))
-      rotateY(var(--studio-tilt-y));
   }
   to {
     opacity: 1;
-    transform: translateY(0) rotateX(var(--studio-tilt-x))
-      rotateY(var(--studio-tilt-y));
+  }
+}
+
+@keyframes studio-card-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -7860,7 +7837,6 @@ h3,
     min-height: 4rem;
   }
 
-  .studio-benefit-card > div,
   .studio-benefit-card span {
     min-height: 4rem;
     height: 100%;
@@ -7972,7 +7948,6 @@ h3,
     min-height: 3.8rem;
   }
 
-  .studio-benefit-card > div,
   .studio-benefit-card span {
     min-height: 3.8rem;
   }
@@ -8044,10 +8019,6 @@ h3,
     transform: none;
   }
 
-  .studio-card-inner,
-  .studio-benefit-card > div {
-    transition: none;
-  }
 }
 
 /* The House: an interactive, image-led philosophy */

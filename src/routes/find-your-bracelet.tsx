@@ -221,8 +221,8 @@ function FindPage() {
   };
 
   const previewStyle = {
-    "--studio-tilt-x": `${tilt.x}deg`,
-    "--studio-tilt-y": `${tilt.y}deg`,
+    "--studio-shift-x": `${tilt.y * 0.45}px`,
+    "--studio-shift-y": `${tilt.x * -0.3}px`,
   } as CSSProperties;
 
   return (
@@ -346,42 +346,52 @@ function FindPage() {
               <div className="studio-wrist" aria-hidden />
 
               <div
-                className={`studio-product-frame ${showGuide ? "is-flipped" : ""}`}
-                key={active.slug}
+                className={`studio-product-frame ${showGuide ? "is-guide" : "is-image"}`}
+                key={`product-${active.slug}-${showGuide ? "guide" : "image"}`}
               >
-                <div className="studio-card-inner">
-                  <div className="studio-card-face studio-card-front">
-                    <img
-                      src={previewImage}
-                      alt={`${active.stone} bracelet live preview`}
-                    />
-                  </div>
-                  <div className="studio-card-face studio-card-back">
+                {showGuide ? (
+                  <div className="studio-card-single studio-card-back">
                     <span>Stone nature</span>
                     <strong>{profile.nature.join(" / ")}</strong>
                     <p>{profile.guidance}</p>
                     <small>Especially suited to</small>
                     <p>{profile.bestFor}.</p>
                   </div>
-                </div>
+                ) : (
+                  <div className="studio-card-single studio-card-front">
+                    <img
+                      src={previewImage}
+                      alt={`${active.stone} bracelet live preview`}
+                    />
+                  </div>
+                )}
               </div>
 
-              <div className="studio-benefits" key={active.slug}>
+              <div
+                className="studio-benefits"
+                key={`benefits-${active.slug}-${showGuide ? "guide" : "image"}`}
+              >
                 {active.qualities.map((quality, index) => (
                   <div
                     key={quality}
-                    className={`studio-benefit-card ${showGuide ? "is-flipped" : ""}`}
+                    className="studio-benefit-card"
                     style={{ animationDelay: `${160 + index * 130}ms` }}
                   >
-                    <div>
-                      <span className="studio-benefit-front">
-                        <i>{String(index + 1).padStart(2, "0")}</i>
-                        {quality}
-                      </span>
-                      <span className="studio-benefit-back">
-                        {profile.traitDetails[index]}
-                      </span>
-                    </div>
+                    <span
+                      className={
+                        showGuide
+                          ? "studio-benefit-back"
+                          : "studio-benefit-front"
+                      }
+                    >
+                      {!showGuide && (
+                        <>
+                          <i>{String(index + 1).padStart(2, "0")}</i>
+                          {quality}
+                        </>
+                      )}
+                      {showGuide && profile.traitDetails[index]}
+                    </span>
                   </div>
                 ))}
               </div>
