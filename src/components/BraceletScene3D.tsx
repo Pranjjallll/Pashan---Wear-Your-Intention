@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { PeacockGlyph } from "@/components/BrandMark";
 import { customStoneOptions, type CustomStoneKey } from "@/data/products";
 
 const MAX_BEADS = 18;
@@ -52,13 +51,6 @@ function createStoneTexture(key: CustomStoneKey) {
   const width = 128;
   const height = 64;
   const data = new Uint8Array(width * height * 4);
-  const dhanYogPalette = [
-    [73, 131, 88],
-    [156, 88, 29],
-    [182, 135, 52],
-    [91, 77, 111],
-    [48, 49, 48],
-  ];
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
@@ -97,10 +89,24 @@ function createStoneTexture(key: CustomStoneKey) {
           colour = mix([8, 8, 8], [70, 67, 62], pore + grain * 0.16);
           break;
         }
-        case "dhan-yog": {
-          const stripe = Math.floor(((u + grain * 0.025 + 1) % 1) * 5);
-          const base = dhanYogPalette[stripe] ?? dhanYogPalette[0]!;
-          colour = mix(base, [230, 193, 111], 0.12 + Math.max(0, grain) * 0.2);
+        case "heart-quartz": {
+          const cloud =
+            (Math.sin(u * Math.PI * 4.5 + v * 5.2) + 1) / 2 +
+            noise(x * 0.55, y * 0.55, 29) * 0.24;
+          colour = mix(
+            [153, 78, 102],
+            [248, 203, 211],
+            0.48 + cloud * 0.34 + grain * 0.12,
+          );
+          break;
+        }
+        case "citrine": {
+          const crystal = (Math.sin(u * Math.PI * 7 + v * 3.2) + 1) / 2;
+          colour = mix(
+            [145, 78, 8],
+            [255, 220, 100],
+            0.5 + crystal * 0.3 + grain * 0.16,
+          );
           break;
         }
       }
@@ -188,13 +194,27 @@ function createStoneMaterials() {
     bumpScale: 0.16,
     envMapIntensity: 0.55,
   });
-  materials["dhan-yog"] = new THREE.MeshPhysicalMaterial({
-    map: textures["dhan-yog"],
-    metalness: 0.3,
-    roughness: 0.24,
-    clearcoat: 0.82,
-    clearcoatRoughness: 0.15,
-    envMapIntensity: 1.2,
+  materials["heart-quartz"] = new THREE.MeshPhysicalMaterial({
+    map: textures["heart-quartz"],
+    metalness: 0,
+    roughness: 0.15,
+    transmission: 0.16,
+    thickness: 0.72,
+    ior: 1.54,
+    clearcoat: 0.96,
+    clearcoatRoughness: 0.08,
+    envMapIntensity: 1.18,
+  });
+  materials.citrine = new THREE.MeshPhysicalMaterial({
+    map: textures.citrine,
+    metalness: 0,
+    roughness: 0.1,
+    transmission: 0.22,
+    thickness: 0.78,
+    ior: 1.54,
+    clearcoat: 1,
+    clearcoatRoughness: 0.06,
+    envMapIntensity: 1.28,
   });
 
   return { materials, textures: Object.values(textures) };
@@ -211,7 +231,7 @@ function FlatBraceletFallback({
     <div className="bracelet-thread-stage is-fallback" aria-live="polite">
       <div className="bracelet-thread" aria-hidden />
       <div className="bracelet-thread-centre">
-        <PeacockGlyph />
+        <strong>Choose with intention</strong>
         <span>
           {beads.length ? "Tap a bead to remove it" : "Begin with a stone"}
         </span>
@@ -548,7 +568,7 @@ export function BraceletScene3D({
         </button>
       </div>
       <div className="bracelet-3d-centre" aria-hidden>
-        <PeacockGlyph />
+        <strong>Choose with intention</strong>
         <span>{beads.length ? "Drag to rotate" : "Begin with a stone"}</span>
         {beads.length > 0 && <small>Tap a bead to remove</small>}
       </div>
