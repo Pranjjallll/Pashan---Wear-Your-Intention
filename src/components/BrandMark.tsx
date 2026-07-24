@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import logo from "@/assets/pashan-logo-transparent.png";
 
 export function PeacockGlyph({ className = "" }: { className?: string }) {
   return (
@@ -45,15 +46,11 @@ export function PeacockGlyph({ className = "" }: { className?: string }) {
 export function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
     <Link to="/" className="brand-mark" aria-label="PASHAN home">
-      <PeacockGlyph className={compact ? "h-8 w-6" : "h-10 w-7"} />
-      <span>
-        <span className="brand-word">Pashan</span>
-        {!compact && (
-          <span className="brand-subline">
-            <span lang="hi">पाषाण</span> · Stone · Energy · Intention
-          </span>
-        )}
-      </span>
+      <img
+        src={logo}
+        alt="PASHAN logo"
+        style={{ height: "44px", width: "auto", objectFit: "contain" }}
+      />
     </Link>
   );
 }

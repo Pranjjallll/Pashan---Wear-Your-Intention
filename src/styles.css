@@ -67,47 +67,47 @@
 :root {
   --radius: 0.25rem;
   /* Core palette G�� #0F1113 / #171A1D / #1D2125 / #F5F3EE / #A8ADB4 / #C8A15A */
-  --background: oklch(0.215 0.006 250);
-  --foreground: oklch(0.965 0.008 92);
-  --surface: oklch(0.27 0.006 250);
-  --elevated: oklch(0.325 0.006 250);
-  --card: oklch(0.32 0.006 250);
-  --card-foreground: oklch(0.955 0.012 85);
-  --popover: oklch(0.27 0.006 250);
-  --popover-foreground: oklch(0.955 0.012 85);
-  --primary: oklch(0.955 0.012 85);
-  --primary-foreground: oklch(0.22 0.006 250);
-  --secondary: oklch(0.32 0.006 250);
-  --secondary-foreground: oklch(0.955 0.012 85);
-  --muted: oklch(0.34 0.006 250);
-  --muted-foreground: oklch(0.78 0.012 250);
-  --accent: oklch(0.79 0.09 82);
-  --accent-foreground: oklch(0.22 0.006 250);
-  --gold: oklch(0.79 0.09 82);
-  --gold-soft: oklch(0.89 0.045 86);
-  --silver: #c8ccd2;
-  --silver-soft: #eef0f2;
-  --copper: #c3723c;
-  --temple-red: #421407;
-  --peacock-green: #123a31;
-  --destructive: oklch(0.55 0.21 27);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.42 0.006 250);
-  --input: oklch(0.36 0.006 250);
-  --ring: oklch(0.79 0.09 82);
-  --chart-1: oklch(0.74 0.1 78);
-  --chart-2: oklch(0.6 0.05 250);
-  --chart-3: oklch(0.5 0.05 250);
-  --chart-4: oklch(0.82 0.07 80);
-  --chart-5: oklch(0.4 0.02 250);
-  --sidebar: oklch(0.215 0.006 250);
-  --sidebar-foreground: oklch(0.955 0.012 85);
-  --sidebar-primary: oklch(0.79 0.09 82);
-  --sidebar-primary-foreground: oklch(0.22 0.006 250);
-  --sidebar-accent: oklch(0.32 0.006 250);
-  --sidebar-accent-foreground: oklch(0.955 0.012 85);
-  --sidebar-border: oklch(0.42 0.006 250);
-  --sidebar-ring: oklch(0.79 0.09 82);
+  --background: #DDC3A3;
+  --foreground: #3A221A; /* Dark Walnut for better text contrast */
+  --surface: #D5B793;
+  --elevated: #E9D6BF;
+  --card: #E9D6BF;
+  --card-foreground: #241611;
+  --popover: #E9D6BF;
+  --popover-foreground: #241611;
+  --primary: #4B2C22;
+  --primary-foreground: #DDC3A3;
+  --secondary: #D5B793;
+  --secondary-foreground: #241611;
+  --muted: #D5B793;
+  --muted-foreground: #5C4A3E; /* Darker muted text for readability */
+  --accent: #C89A5A;
+  --accent-foreground: #DDC3A3;
+  --gold: #C89A5A;
+  --gold-soft: #D9B37C;
+  --silver: #E0DED5;
+  --silver-soft: #F0EEE5;
+  --copper: #C89A5A;
+  --temple-red: #2F1A14;
+  --peacock-green: #5A4E46;
+  --destructive: #B22222;
+  --destructive-foreground: #DDC3A3;
+  --border: rgba(75,44,34,.25); /* Darker border */
+  --input: #D5B793;
+  --ring: #C89A5A;
+  --chart-1: #C89A5A;
+  --chart-2: #6E5B4B;
+  --chart-3: #4B3B31;
+  --chart-4: #D9B37C;
+  --chart-5: #4B2C22;
+  --sidebar: #DDC3A3;
+  --sidebar-foreground: #241611;
+  --sidebar-primary: #4B2C22;
+  --sidebar-primary-foreground: #DDC3A3;
+  --sidebar-accent: #D5B793;
+  --sidebar-accent-foreground: #241611;
+  --sidebar-border: rgba(75,44,34,.25);
+  --sidebar-ring: #C89A5A;
 }
 
 @layer base {
@@ -175,20 +175,21 @@
   justify-content: center;
   gap: 0.6rem;
   padding: 1rem 2.25rem;
-  background: var(--gold);
-  color: var(--background);
+  background: #3A221A;
+  color: #F7F2EA;
   font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   transition: all 0.25s ease;
-  border: 1px solid var(--gold);
+  border: 1px solid #3A221A;
   &:hover {
-    background: transparent;
-    color: var(--gold);
+    background: #D8B07D;
+    border-color: #D8B07D;
+    color: #3A221A;
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(200, 161, 90, 0.2), 0 0 10px rgba(200, 161, 90, 0.1);
+    box-shadow: 0 10px 20px rgba(216, 176, 125, 0.2), 0 0 10px rgba(216, 176, 125, 0.1);
   }
 }
 
@@ -388,18 +389,15 @@ button {
   position: fixed;
   inset: 0 0 auto;
   z-index: 60;
-  color: var(--foreground);
-  transition:
-    background-color 0.4s ease,
-    backdrop-filter 0.4s ease,
-    border-color 0.4s ease;
-  background-color: rgba(17, 17, 17, 0.93);
-  border-bottom: 1px solid transparent;
+  color: #F8F1E7;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  background-color: #3A221A;
+  border-bottom: 1px solid rgba(201, 155, 94, 0.3);
   backdrop-filter: blur(20px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .site-header.is-scrolled {
-  border-color: var(--gold);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: #C99B5E;
 }
 .header-inner {
   position: relative;
@@ -464,7 +462,7 @@ button {
 .header-concierge,
 .cart-trigger {
   position: relative;
-  color: color-mix(in oklab, var(--foreground) 68%, transparent);
+  color: #F8F1E7;
   font-size: 0.63rem;
   letter-spacing: 0.19em;
   text-transform: uppercase;
@@ -942,14 +940,7 @@ button {
 .premium-hero-overlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(6, 7, 7, 0.94) 0%,
-      rgba(8, 8, 7, 0.72) 36%,
-      rgba(8, 8, 7, 0.16) 70%
-    ),
-    linear-gradient(0deg, rgba(8, 9, 9, 0.82), transparent 45%);
+  background: rgba(0, 0, 0, 0.25);
 }
 .premium-hero-lines {
   position: absolute;
@@ -1142,7 +1133,7 @@ button {
       rgba(195, 114, 60, 0.16),
       transparent 34rem
     ),
-    linear-gradient(180deg, #111312, #0b0d0d);
+    linear-gradient(180deg, var(--surface), #0b0d0d);
 }
 .editorial-stack-section::before {
   content: "";
@@ -1315,7 +1306,7 @@ button {
       rgba(18, 20, 18, 0.98) 48%,
       rgba(66, 20, 7, 0.84)
     ),
-    #111312;
+    var(--surface);
 }
 .bead-oracle-grid {
   min-height: 48rem;
@@ -2390,7 +2381,7 @@ button {
   position: relative;
   overflow: hidden;
   padding-top: clamp(5rem, 9vw, 9rem);
-  background: #080a0a;
+  background: #2F1A14;
   border-top: 1px solid var(--border);
 }
 .footer-aura {
@@ -3317,10 +3308,10 @@ button {
   top: 100%;
   left: 0;
   width: 100vw;
-  background-color: rgba(17, 17, 17, 0.95);
+  background-color: #3E251E; /* Slightly lighter than navbar */
   backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--gold);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid #C99B5E;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   padding: 3rem 5rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3328,7 +3319,7 @@ button {
   z-index: 50;
 }
 .mega-column h4 {
-  color: var(--gold);
+  color: #D8B07D; /* Soft Gold */
   font-family: var(--font-serif);
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
@@ -3337,11 +3328,12 @@ button {
 }
 .mega-column a {
   display: block;
-  color: var(--foreground);
-  font-size: 0.8rem;
+  color: #F8F1E7; /* Warm Ivory */
+  font-size: 0.85rem;
+  font-weight: 500;
   margin-bottom: 0.8rem;
   transition: color 0.3s ease;
 }
 .mega-column a:hover {
-  color: var(--gold);
+  color: #D8B07D; /* Soft Gold */
 }

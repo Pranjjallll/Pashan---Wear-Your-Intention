@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             "PASHAN is a luxury gemstone house creating handcrafted natural stone bracelets — wearable symbols of confidence, prosperity, focus and resilience.",
         },
         { name: "author", content: "PASHAN" },
-        { name: "theme-color", content: "#0F1113" },
+        { name: "theme-color", content: "#F7F2EA" },
         { property: "og:title", content: "PASHAN — Wear Your Intention" },
         {
           property: "og:description",
